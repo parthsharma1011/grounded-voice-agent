@@ -164,6 +164,9 @@ def analyze_set(name):
         "P3_vs_P1": wilcoxon_signed_rank([by["after_verified"][s]["latency_ms"] - by["before"][s]["latency_ms"] for s in lat_s]),
         "P2_vs_P1": wilcoxon_signed_rank([by["after"][s]["latency_ms"] - by["before"][s]["latency_ms"] for s in lat_s]),
         "median_ratio_P3_P1": round(statistics.median(by["after_verified"][s]["latency_ms"] / by["before"][s]["latency_ms"] for s in lat_s), 2),
+        "n": len(lat_s),
+        "P3_slower_than_P1": sum(1 for s in lat_s if by["after_verified"][s]["latency_ms"] > by["before"][s]["latency_ms"]),
+        "P2_slower_than_P1": sum(1 for s in lat_s if by["after"][s]["latency_ms"] > by["before"][s]["latency_ms"]),
     }
 
     tools = {}

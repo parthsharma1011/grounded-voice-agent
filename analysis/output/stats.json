@@ -363,7 +363,10 @@
     "p": 3.3184402546029516e-05,
     "r": 0.43749426075870784
    },
-   "median_ratio_P3_P1": 1.66
+   "median_ratio_P3_P1": 1.66,
+   "n": 90,
+   "P3_slower_than_P1": 87,
+   "P2_slower_than_P1": 66
   },
   "tool_use": {
    "P1": {
@@ -1019,7 +1022,10 @@
     "p": 0.0008406297974659049,
     "r": 0.3048129072153303
    },
-   "median_ratio_P3_P1": 1.73
+   "median_ratio_P3_P1": 1.73,
+   "n": 120,
+   "P3_slower_than_P1": 113,
+   "P2_slower_than_P1": 81
   },
   "tool_use": {
    "P1": {

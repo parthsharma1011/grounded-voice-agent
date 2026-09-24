@@ -267,7 +267,7 @@ def fig_process():
         f"Experiment runner\n\n{len(settings.LABELS)} conditions x {sum(N_QUESTIONS.values())}\n= {N_ANSWERS} answers\n"
         "text layer, live model",
         "Deterministic scorer\n\nlookup rule +\nnumber tracing +\nsafety rules",
-        "Statistics\n\nWilson, Cochran's Q,\nexact McNemar,\nHolm, Newcombe",
+        "Statistics\n\nWilson intervals,\nMcNemar + Holm,\nCohen's κ, PABAK",
         f"Audit\n\n{N_FLAGS} flags +\n{N_TRAP_ANSWERS} trap answers\nread by hand",
     ]
     xs = [0.1 + i * (w + gap) for i in range(len(labels))]

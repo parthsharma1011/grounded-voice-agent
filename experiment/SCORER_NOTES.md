@@ -50,7 +50,7 @@ Why each rule in `experiment/scorer.py` and `experiment/run.py` exists.
 
 - **P1** uses the agent's own system prompt and tools with `tool_choice="auto"` and returns free prose.
 - **P2** uses the same prompt and tools, plus `GROUNDING_SCHEMA_ADDENDUM` and a `response_format` schema (`GroundedReply`) that tags each fact with its source tool. This is structured output through the hosted API, not constrained decoding at the token level. The check against tool results happens after the reply is produced. The model never sees it, so it measures the reply and does not correct it.
-- **P3** forces a tool call in the first round (`tool_choice="required"`, then `"auto"`). A second call then shows the model its draft, its claim tags and the real tool results, and asks for a corrected reply, following Chain-of-Verification (Dhuliawala et al., 2023). If the corrected reply cannot be parsed, the draft is kept.
+- **P3** forces a tool call in the first round (`tool_choice="required"`, then `"auto"`). A second call then shows the model its draft, its claim tags and the real tool results, and asks for a corrected reply, following Chain-of-Verification (Dhuliawala et al., 2024). If the corrected reply cannot be parsed, the draft is kept.
 - All three conditions use the same model (`LLM_MODEL`), the same tools and the same scorer, with no fine-tuning. The verification pass is the only second model call, and it revises the reply without scoring it.
 - A turn may take up to four tool rounds. After that it is recorded as "[no final reply after 4 tool rounds]".
 - Tools are called directly on the agent object, so the experiment exercises the same business logic as the live agent.

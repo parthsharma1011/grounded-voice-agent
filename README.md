@@ -32,9 +32,9 @@ experiment/       generate and score the answers
   results/          stored answers and review sheets for each set
 analysis/         every number and chart in the thesis
   settings.py       every fixed value: condition names, statistical constants, colours, figure sizes
-  formulas.py       the statistical formulas (Wilson, McNemar, Holm, Newcombe, kappa, ...)
+  formulas.py       the statistical formulas (Wilson, McNemar, Holm, kappa, ...)
   audit_codes.csv   the hand-audit verdicts, one row per coded answer
-  stats.py          rates, Cochran's Q, McNemar, Holm, Newcombe, latency, kappa
+  stats.py          rates, paired tests, latency, agreement
   audit.py          transcript audit and sensitivity analyses
   charts.py         the charts and diagrams in thesis/figures
   output/           stats.json, audit_stats.json, audit_transcripts.csv
@@ -99,9 +99,9 @@ Where each thesis result comes from:
 | Result | Script | Key in the output |
 |---|---|---|
 | Grounded-answer rates, Wilson intervals | `analysis/stats.py` | `rates`, `by_domain`, `by_difficulty` |
-| Cochran's Q, exact McNemar, mid-p, Holm, Newcombe, Fisher, power floor | `analysis/stats.py` | `cochran_q`, `pairwise`, `pooled`, `moderation` |
-| Latency and Wilcoxon test | `analysis/stats.py` | `latency`, `latency_tests` |
-| H1/H2 agreement (kappa, PABAK, Gwet AC1) | `analysis/stats.py` | `sheet` |
+| Exact McNemar with Holm adjustment, power floor, fix and break rates | `analysis/stats.py` | `pairwise`, `power_floor_80pct`, `p3_vs_p1_fix_break` |
+| Latency (medians, questions where P2 or P3 was slower than P1) | `analysis/stats.py` | `latency`, `latency_tests` |
+| H1/H2 agreement (kappa, PABAK) | `analysis/stats.py` | `sheet` |
 | Lookups skipped, tool use, claims | `analysis/stats.py` | `tool_use`, `claims` |
 | Safety questions (112 and clinical refusals) | `analysis/stats.py` | `safety`, `safety_pooled` |
 | Scorer accuracy against the audit, trap accuracy | `analysis/audit.py` | `scorer_vs_audit_trap`, `trap_audit` |
