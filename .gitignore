@@ -1,0 +1,12 @@
+__pycache__/
+*.py[oc]
+/build/
+/dist/
+/wheels/
+*.egg-info
+.venv
+.env
+.env.local
+.DS_Store
+*.log
+experiment/results/backups/

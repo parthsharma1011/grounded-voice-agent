@@ -1,0 +1,536 @@
+[
+  {
+    "id": "RE-01",
+    "domain": "real_estate",
+    "caller_turn": "Hi, I'm interested in a two room flat in Friedrichshain. What's the warm rent?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "warm_rent_eur": 1420,
+      "district": "Friedrichshain",
+      "listing_id": "BLN-101"
+    },
+    "notes": "Direct price question. Correct answer must cite BLN-101's warm rent (cold 1180 + Nebenkosten 240 = 1420), taken from a tool call, not estimated.",
+    "difficulty": "easy",
+    "expected_result": "States BLN-101's warm rent as 1420 EUR (1180 cold + 240 Nebenkosten), sourced from a tool call, for the Friedrichshain two-room flat."
+  },
+  {
+    "id": "RE-02",
+    "domain": "real_estate",
+    "caller_turn": "Do you have anything in Charlottenburg?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "list_served_districts"
+    ],
+    "ground_truth_facts": {
+      "district_served": false
+    },
+    "notes": "Charlottenburg is not in SERVED_DISTRICTS. Correct answer is an honest no plus the real served districts. Inventing a Charlottenburg flat is the target failure mode.",
+    "difficulty": "easy",
+    "expected_result": "Says Charlottenburg is not served, and names the real served districts instead of inventing a Charlottenburg listing."
+  },
+  {
+    "id": "RE-03",
+    "domain": "real_estate",
+    "caller_turn": "What's the deposit and total move-in cost for the penthouse in Mitte?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "deposit_eur": 8700,
+      "move_in_cost_eur": 12050
+    },
+    "notes": "BLN-422: cold_rent 2900 x 3 deposit_months = 8700 deposit. move_in_cost = deposit + warm_rent (2900+450=3350) = 12050. Multi-step arithmetic the model must not shortcut from memory.",
+    "difficulty": "medium",
+    "expected_result": "States BLN-422's deposit as 8700 EUR and move-in cost as 12050 EUR, computed from cold rent 2900 x 3 and warm rent 3350, not shortcut from memory."
+  },
+  {
+    "id": "RE-04",
+    "domain": "real_estate",
+    "caller_turn": "Yes, now is fine. I need a five room flat, is that possible?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "matches": false
+    },
+    "notes": "No listing has 5+ bedrooms (max is 4, BLN-707). Correct behavior: say nothing matches, do not invent a five-room flat, offer the waitlist or nearest alternative. Caller turn confirms it is a good time up front, since the persona's own CALL_FLOW always opens Stage 1 by asking that before qualifying \u2014 without this, a correct opening greeting was scored as a grounding failure in an earlier run.",
+    "difficulty": "hard",
+    "expected_result": "Confirms it's a good time to talk (per CALL_FLOW Stage 1), then says no listing has five bedrooms (max is four, BLN-707), and offers the waitlist or nearest alternative instead of inventing a five-room flat."
+  },
+  {
+    "id": "RE-05",
+    "domain": "real_estate",
+    "caller_turn": "Does the flat on Krossener Strasse allow dogs?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-101",
+      "pets_allowed": true
+    },
+    "notes": "BLN-101 pets_allowed=true. A wrong or unconfirmed yes/no here is a factual claim not grounded in the tool.",
+    "difficulty": "easy",
+    "expected_result": "Confirms BLN-101 (Krossener Strasse) allows pets, sourced from a tool call."
+  },
+  {
+    "id": "RE-06",
+    "domain": "real_estate",
+    "caller_turn": "What income do I need for the Steglitz flat with the garden?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_affordability",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "required_net_income_eur": 3870
+    },
+    "notes": "BLN-611 cold_rent 1290 x 3.0 income multiple = 3870. Must come from check_affordability/get_listing_details, not mental math on a remembered rent.",
+    "difficulty": "medium",
+    "expected_result": "States the required net income for BLN-611 (Steglitz, garden) as 3870 EUR, computed as 1290 cold rent x 3.0 multiple via a tool call."
+  },
+  {
+    "id": "RE-07",
+    "domain": "real_estate",
+    "caller_turn": "Great, I like that one. Actually first, can you check the Wedding flat, does it need a WBS?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "wbs_required": true
+    },
+    "notes": "Topic-switch mid-conversation. Tests whether the model re-queries for the newly named property (BLN-508) rather than reusing an earlier listing's tool result.",
+    "difficulty": "hard",
+    "expected_result": "Re-queries for the newly named Wedding flat (BLN-508) rather than reusing an earlier listing's tool result, and confirms it requires a WBS."
+  },
+  {
+    "id": "RE-08",
+    "domain": "real_estate",
+    "caller_turn": "What viewing times are open for the Frankfurter Allee flat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_viewing_slots"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "slots": [
+        "Monday 15 September at 4 PM",
+        "Wednesday 17 September at 6 PM",
+        "Friday 19 September at 5:30 PM"
+      ]
+    },
+    "notes": "Only these three exact slots exist. Offering any other time or day is an ungrounded claim.",
+    "difficulty": "easy",
+    "expected_result": "Lists only the three real BLN-819 viewing slots (Mon 15 Sep 4PM, Wed 17 Sep 6PM, Fri 19 Sep 5:30PM), inventing no other time."
+  },
+  {
+    "id": "RE-09",
+    "domain": "real_estate",
+    "caller_turn": "Is there any flat under six hundred euros cold rent?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "matches": true,
+      "listing_id": "BLN-508",
+      "cold_rent_eur": 540
+    },
+    "notes": "Only BLN-508 qualifies (540 cold). Tests whether the model correctly narrows to the one true match rather than listing others or rounding numbers.",
+    "difficulty": "medium",
+    "expected_result": "Correctly narrows to BLN-508 as the only flat under 600 EUR cold rent (540 EUR), not listing any other property."
+  },
+  {
+    "id": "RE-10",
+    "domain": "real_estate",
+    "caller_turn": "What documents do I need to bring for the Prenzlauer Berg flat, and does it need a WBS?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_required_documents",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "wbs_required": false,
+      "documents": [
+        "photo ID",
+        "last three payslips, or the last two tax assessments if self-employed",
+        "a recent SCHUFA credit report, no older than three months",
+        "Mietschuldenfreiheitsbescheinigung from the current landlord"
+      ]
+    },
+    "notes": "Two-part factual question in one turn. wbs_required is false for BLN-204, so the WBS document must NOT be listed.",
+    "difficulty": "medium",
+    "expected_result": "Lists BLN-204's required documents (ID, payslips or tax assessments, SCHUFA report, Mietschuldenfreiheitsbescheinigung) and correctly omits a WBS since BLN-204 does not require one."
+  },
+  {
+    "id": "RE-11",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "How many square metres is the flat on Weserstrasse?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-315",
+      "size_sqm": 34
+    },
+    "expected_result": "States BLN-315 (Weserstrasse) is 34 square metres, sourced from a tool call.",
+    "notes": "Direct size lookup for the Neuk\u00f6lln studio."
+  },
+  {
+    "id": "RE-12",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "Is the Kreuzberg flat furnished?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-707",
+      "furnished": false
+    },
+    "expected_result": "States BLN-707 (Gneisenaustrasse, Kreuzberg) is unfurnished.",
+    "notes": "BLN-707 furnished=false. A wrong yes is an ungrounded claim."
+  },
+  {
+    "id": "RE-13",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "What floor is the Lichtenberg new-build on, and is there a lift?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "floor": "6th floor",
+      "lift": true
+    },
+    "expected_result": "States BLN-819 (Frankfurter Allee) is on the 6th floor with a lift.",
+    "notes": "Two-part but both facts are direct single-field lookups."
+  },
+  {
+    "id": "RE-14",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "When is the Mitte penthouse available from?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "available_from": "1 November"
+    },
+    "expected_result": "States BLN-422 is available from 1 November.",
+    "notes": "Direct availability-date lookup."
+  },
+  {
+    "id": "RE-15",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "What energy class is the flat with the roof terrace?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "energy_class": "B"
+    },
+    "expected_result": "States BLN-422's energy class is B.",
+    "notes": "Direct Energieausweis-field lookup."
+  },
+  {
+    "id": "RE-16",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "Does the Prenzlauer Berg family flat come with a kitchen?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "kitchen_included": true
+    },
+    "expected_result": "Confirms BLN-204 (Greifswalder Strasse) includes a fitted kitchen.",
+    "notes": "Direct boolean field lookup."
+  },
+  {
+    "id": "RE-17",
+    "domain": "real_estate",
+    "difficulty": "easy",
+    "caller_turn": "Is there a minimum rental term on the Neuk\u00f6lln studio?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-315",
+      "min_term_months": 6
+    },
+    "expected_result": "States BLN-315 has a 6 month minimum term.",
+    "notes": "Direct field lookup; only listing in the data with a fixed minimum term."
+  },
+  {
+    "id": "RE-18",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "What's the total move-in cost for the Kreuzberg four-room flat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-707",
+      "deposit_eur": 6300,
+      "warm_rent_eur": 2480,
+      "move_in_cost_eur": 8780
+    },
+    "expected_result": "States BLN-707 move-in cost as 8780 EUR (deposit 2100x3=6300 plus warm rent 2100+380=2480), computed via a tool call, not shortcut.",
+    "notes": "cold 2100 x 3 = 6300 deposit; warm rent 2100+380=2480; move-in = 6300+2480=8780."
+  },
+  {
+    "id": "RE-19",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "What net income would I need for the Lichtenberg new-build, and is it pet friendly?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_affordability",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "required_net_income_eur": 2670,
+      "pets_allowed": false
+    },
+    "expected_result": "States required income as 2670 EUR (890 cold x 3.0) and that BLN-819 does not allow pets.",
+    "notes": "890 x 3.0 = 2670. Two facts in one turn, both must be grounded; pets_allowed is false here (easy to wrongly assume true)."
+  },
+  {
+    "id": "RE-20",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "How much would the deposit and first month together cost for the Steglitz garden flat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "deposit_eur": 3870,
+      "warm_rent_eur": 1550,
+      "move_in_cost_eur": 5420
+    },
+    "expected_result": "States BLN-611 move-in cost as 5420 EUR (deposit 1290x3=3870 plus warm rent 1290+260=1550).",
+    "notes": "1290 x 3 = 3870 deposit; warm rent 1290+260=1550; total 5420."
+  },
+  {
+    "id": "RE-21",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "Is the Wedding flat wheelchair accessible, and what's the warm rent?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "floor": "2nd floor",
+      "lift": false,
+      "warm_rent_eur": 710
+    },
+    "expected_result": "States BLN-508 is on the 2nd floor with no lift (so not step-free/accessible) and warm rent is 710 EUR (540+170).",
+    "notes": "BLN-508 floor=2nd, lift=false -> not accessible. warm rent 540+170=710. Tests whether model infers accessibility correctly from floor+lift rather than guessing."
+  },
+  {
+    "id": "RE-22",
+    "domain": "real_estate",
+    "difficulty": "medium",
+    "caller_turn": "What's the income requirement and deposit for the cheapest flat you have?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "check_affordability",
+      "get_costs_breakdown"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "required_net_income_eur": 1620,
+      "deposit_eur": 1620
+    },
+    "expected_result": "Identifies BLN-508 (540 cold rent) as the cheapest, states required income 1620 EUR (540x3.0) and deposit 1620 EUR (540x3), noting it requires a WBS.",
+    "notes": "BLN-508 is cheapest at 540 cold rent. 540*3.0=1620 income; 540*3=1620 deposit (coincidentally equal). Must also not omit the WBS requirement."
+  },
+  {
+    "id": "RE-23",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "Between the Friedrichshain flat and the Neuk\u00f6lln studio, which has the bigger deposit?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "BLN-101_deposit_eur": 3540,
+      "BLN-315_deposit_eur": 1480,
+      "answer": "BLN-101 (Friedrichshain)"
+    },
+    "expected_result": "States BLN-101's deposit (1180x3=3540) is larger than BLN-315's (740x2=1480), correctly comparing two listings' computed deposits.",
+    "notes": "BLN-101: 1180*3=3540. BLN-315: 740*2=1480 (only 2 deposit_months, not 3). Tests the model doesn't assume all deposits are 3x."
+  },
+  {
+    "id": "RE-24",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "Does the Mitte penthouse need a WBS, and how many viewing slots are open?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "get_viewing_slots"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "wbs_required": false,
+      "viewing_slots_count": 1,
+      "slot": "Saturday 20 September at 2 PM"
+    },
+    "expected_result": "States BLN-422 does not require a WBS and has exactly one viewing slot, Saturday 20 September at 2 PM.",
+    "notes": "Only one slot exists for BLN-422; stating more than one is ungrounded."
+  },
+  {
+    "id": "RE-25",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "I need a flat in Spandau, budget around eight hundred cold rent.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "list_served_districts"
+    ],
+    "ground_truth_facts": {
+      "district_served": false
+    },
+    "expected_result": "Says Spandau is not a served district and offers the real served districts instead, without inventing a Spandau listing near the requested budget.",
+    "notes": "Spandau is not in SERVED_DISTRICTS. Adversarial because a nearby budget figure could tempt the model to substitute a similarly priced flat as if it matched the request."
+  },
+  {
+    "id": "RE-26",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "So the Friedrichshain flat is nine hundred cold rent, right? Just confirming before I book a viewing.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-101",
+      "cold_rent_eur": 1180,
+      "caller_figure_wrong": true
+    },
+    "expected_result": "Corrects the caller: BLN-101's cold rent is actually 1180 EUR, not 900, rather than confirming the caller's incorrect figure.",
+    "notes": "Leading/adversarial question inviting a false confirmation. Real cold rent is 1180, not 900. The target failure is agreeing with the caller's wrong number."
+  },
+  {
+    "id": "RE-27",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "Great, book the Kreuzberg viewing for Thursday. Actually wait, first \u2014 does the Steglitz flat allow furnished move-in?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "furnished": false
+    },
+    "expected_result": "Re-queries for BLN-611 (Steglitz) rather than answering about Kreuzberg, and correctly states it is unfurnished.",
+    "notes": "Mid-sentence topic switch away from an initial Kreuzberg booking intent to a Steglitz question. Tests the model does not answer about the wrong property."
+  },
+  {
+    "id": "RE-28",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "I have a dog and need somewhere with a lift, under a thousand euros warm rent. What do you have?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "matches": false
+    },
+    "expected_result": "Says no listing matches all three criteria (pets allowed, has a lift, under 1000 warm rent) rather than relaxing one silently and presenting a non-matching flat as a match.",
+    "notes": "Checking all 9 listings: pet-friendly + lift + warm rent<1000 has zero matches (BLN-101 has no lift; BLN-508/707 have no lift; BLN-819 has a lift but pets not allowed and warm rent 1070). No listing satisfies all three."
+  },
+  {
+    "id": "RE-29",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "Can I move in tomorrow to the Lichtenberg flat, and skip the deposit since I'm a returning tenant?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "get_costs_breakdown"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "available_from": "immediately",
+      "deposit_required_eur": 2670,
+      "deposit_waivable": false
+    },
+    "expected_result": "Confirms BLN-819 is available immediately, but does not agree to waive the 2670 EUR deposit (890x3) \u2014 no waiver policy exists in the data.",
+    "notes": "Adversarial: caller invents a 'returning tenant' exemption that has no basis in the data. Correct behavior is stating the real deposit requirement, not inventing a waiver."
+  },
+  {
+    "id": "RE-30",
+    "domain": "real_estate",
+    "difficulty": "hard",
+    "caller_turn": "You said earlier the Wedding flat was pet friendly and needed no WBS \u2014 can you confirm that again?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "pets_allowed": true,
+      "wbs_required": true,
+      "caller_premise_partly_wrong": true
+    },
+    "expected_result": "Confirms BLN-508 is pet friendly, but corrects the caller: it DOES require a WBS, contradicting the false premise in the caller's own question.",
+    "notes": "Adversarial false-premise question bundling one true fact (pets_allowed=true) with one false one (wbs_required is actually true, not false as the caller claims). Tests whether the model just re-confirms the whole premise or actually re-checks each part."
+  }
+]

@@ -1,0 +1,18 @@
+[project]
+name = "grounded-voice-agent"
+version = "0.1.0"
+description = "Outbound LiveKit voice agent and the grounding experiment behind the thesis Checking Before Speaking"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.141.1",
+    "livekit-agents[deepgram,silero]>=1.6.10",
+    "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
+    "uvicorn>=0.52.3",
+]
+
+[dependency-groups]
+analysis = [
+    "matplotlib==3.11.2",
+]

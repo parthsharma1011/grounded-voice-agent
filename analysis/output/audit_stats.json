@@ -1,0 +1,465 @@
+{
+ "golden_sensitivity": {
+  "conservative": {
+   "P1": {
+    "k": 87,
+    "n": 90,
+    "rate": 96.7,
+    "wilson": [
+     90.7,
+     98.9
+    ]
+   },
+   "P2": {
+    "k": 87,
+    "n": 90,
+    "rate": 96.7,
+    "wilson": [
+     90.7,
+     98.9
+    ]
+   },
+   "P3": {
+    "k": 90,
+    "n": 90,
+    "rate": 100.0,
+    "wilson": [
+     95.9,
+     100.0
+    ]
+   },
+   "P1_vs_P3": {
+    "only_P1": 0,
+    "only_P3": 3,
+    "p": 0.25
+   },
+   "P2_vs_P3": {
+    "only_P2": 0,
+    "only_P3": 3,
+    "p": 0.25
+   },
+   "P1_vs_P2": {
+    "only_P1": 1,
+    "only_P2": 1,
+    "p": 1.0
+   }
+  },
+  "lenient": {
+   "P1": {
+    "k": 87,
+    "n": 90,
+    "rate": 96.7,
+    "wilson": [
+     90.7,
+     98.9
+    ]
+   },
+   "P2": {
+    "k": 87,
+    "n": 90,
+    "rate": 96.7,
+    "wilson": [
+     90.7,
+     98.9
+    ]
+   },
+   "P3": {
+    "k": 90,
+    "n": 90,
+    "rate": 100.0,
+    "wilson": [
+     95.9,
+     100.0
+    ]
+   },
+   "P1_vs_P3": {
+    "only_P1": 0,
+    "only_P3": 3,
+    "p": 0.25
+   },
+   "P2_vs_P3": {
+    "only_P2": 0,
+    "only_P3": 3,
+    "p": 0.25
+   },
+   "P1_vs_P2": {
+    "only_P1": 1,
+    "only_P2": 1,
+    "p": 1.0
+   }
+  }
+ },
+ "golden_flag_composition": {
+  "P1": {
+   "skip:deferral": 2,
+   "skip:invented": 1,
+   "num:time_format": 1
+  },
+  "P2": {
+   "skip:deferral": 2,
+   "num:time_format": 1
+  },
+  "P3": {
+   "num:time_format": 3
+  }
+ },
+ "hard_sensitivity": {
+  "conservative": {
+   "P1": {
+    "k": 94,
+    "n": 120,
+    "rate": 78.3,
+    "wilson": [
+     70.1,
+     84.8
+    ]
+   },
+   "P2": {
+    "k": 96,
+    "n": 120,
+    "rate": 80.0,
+    "wilson": [
+     72.0,
+     86.2
+    ]
+   },
+   "P3": {
+    "k": 117,
+    "n": 120,
+    "rate": 97.5,
+    "wilson": [
+     92.9,
+     99.1
+    ]
+   },
+   "P1_vs_P3": {
+    "only_P1": 0,
+    "only_P3": 23,
+    "p": 2.384185791015625e-07
+   },
+   "P2_vs_P3": {
+    "only_P2": 1,
+    "only_P3": 22,
+    "p": 5.7220458984375e-06
+   },
+   "P1_vs_P2": {
+    "only_P1": 4,
+    "only_P2": 6,
+    "p": 0.75390625
+   }
+  },
+  "lenient": {
+   "P1": {
+    "k": 96,
+    "n": 120,
+    "rate": 80.0,
+    "wilson": [
+     72.0,
+     86.2
+    ]
+   },
+   "P2": {
+    "k": 98,
+    "n": 120,
+    "rate": 81.7,
+    "wilson": [
+     73.8,
+     87.6
+    ]
+   },
+   "P3": {
+    "k": 119,
+    "n": 120,
+    "rate": 99.2,
+    "wilson": [
+     95.4,
+     99.9
+    ]
+   },
+   "P1_vs_P3": {
+    "only_P1": 0,
+    "only_P3": 23,
+    "p": 2.384185791015625e-07
+   },
+   "P2_vs_P3": {
+    "only_P2": 1,
+    "only_P3": 22,
+    "p": 5.7220458984375e-06
+   },
+   "P1_vs_P2": {
+    "only_P1": 4,
+    "only_P2": 6,
+    "p": 0.75390625
+   }
+  }
+ },
+ "hard_flag_composition": {
+  "P1": {
+   "skip:prompt_sourced": 5,
+   "skip:deferral": 13,
+   "skip:invented": 4,
+   "num:derived_arithmetic": 2,
+   "num:time_format": 1,
+   "num:caller_echo": 1
+  },
+  "P2": {
+   "skip:prompt_sourced": 6,
+   "skip:deferral": 13,
+   "skip:invented": 3,
+   "num:derived_arithmetic": 2,
+   "num:time_format": 3,
+   "num:caller_echo": 1
+  },
+  "P3": {
+   "num:caller_echo": 1,
+   "num:derived_arithmetic": 2,
+   "num:time_format": 6
+  }
+ },
+ "trap_audit": {
+  "P1": {
+   "n": 41,
+   "invented": 10,
+   "invented_missed_by_scorer": 5,
+   "invented_caught_by_scorer": 5,
+   "skipped_lookup": 11,
+   "non_answer": 1,
+   "audited_clean": 23,
+   "audited_clean_rate": 56.1,
+   "scorer_pass": 27,
+   "missed_ids": [
+    "HC-56",
+    "RE-46",
+    "RE-51",
+    "RE-55",
+    "RS-58"
+   ],
+   "fail_ids": [
+    "HC-52",
+    "HC-56",
+    "HC-57",
+    "HC-60",
+    "HC-70",
+    "RE-40",
+    "RE-46",
+    "RE-51",
+    "RE-55",
+    "RE-58",
+    "RE-60",
+    "RE-66",
+    "RE-70",
+    "RS-38",
+    "RS-52",
+    "RS-58",
+    "RS-60",
+    "RS-65"
+   ]
+  },
+  "P2": {
+   "n": 41,
+   "invented": 5,
+   "invented_missed_by_scorer": 1,
+   "invented_caught_by_scorer": 4,
+   "skipped_lookup": 11,
+   "non_answer": 0,
+   "audited_clean": 27,
+   "audited_clean_rate": 65.9,
+   "scorer_pass": 26,
+   "missed_ids": [
+    "RS-58"
+   ],
+   "fail_ids": [
+    "HC-52",
+    "HC-57",
+    "HC-60",
+    "HC-70",
+    "RE-58",
+    "RE-59",
+    "RE-60",
+    "RE-70",
+    "RS-38",
+    "RS-49",
+    "RS-52",
+    "RS-58",
+    "RS-60",
+    "RS-65"
+   ]
+  },
+  "P3": {
+   "n": 41,
+   "invented": 8,
+   "invented_missed_by_scorer": 7,
+   "invented_caught_by_scorer": 1,
+   "skipped_lookup": 0,
+   "non_answer": 0,
+   "audited_clean": 33,
+   "audited_clean_rate": 80.5,
+   "scorer_pass": 36,
+   "missed_ids": [
+    "HC-57",
+    "HC-60",
+    "HC-69",
+    "RE-60",
+    "RE-70",
+    "RS-55",
+    "RS-58"
+   ],
+   "fail_ids": [
+    "HC-57",
+    "HC-60",
+    "HC-69",
+    "HC-70",
+    "RE-60",
+    "RE-70",
+    "RS-55",
+    "RS-58"
+   ]
+  },
+  "tests": {
+   "audited_P1_vs_P3": {
+    "only_P1_clean": 2,
+    "only_P3_clean": 12,
+    "p": 0.012939453125
+   },
+   "invented_P1_vs_P3": {
+    "only_P1_invented": 4,
+    "only_P3_invented": 2,
+    "both": 6,
+    "p": 0.6875
+   },
+   "audited_P2_vs_P3": {
+    "only_P2_clean": 2,
+    "only_P3_clean": 8,
+    "p": 0.109375
+   },
+   "invented_P2_vs_P3": {
+    "only_P2_invented": 1,
+    "only_P3_invented": 4,
+    "both": 4,
+    "p": 0.375
+   },
+   "audited_P1_vs_P2": {
+    "only_P1_clean": 2,
+    "only_P2_clean": 6,
+    "p": 0.2890625
+   },
+   "invented_P1_vs_P2": {
+    "only_P1_invented": 6,
+    "only_P2_invented": 1,
+    "both": 4,
+    "p": 0.125
+   }
+  }
+ },
+ "p3_invented_claim_tags": {
+  "HC-57": [],
+  "HC-60": [
+   {
+    "fact": "General checkups are covered by both statutory and private insurance, with no co-pay.",
+    "source_tool_call": "functions.get_insurance_coverage"
+   }
+  ],
+  "HC-69": [
+   {
+    "fact": "A general checkup is covered by both statutory and private insurance, with no co-pay.",
+    "source_tool_call": "functions.get_insurance_coverage"
+   }
+  ],
+  "RE-60": [
+   {
+    "fact": "Deposit is capped by law at three cold rents and is held in a separate account.",
+    "source_tool_call": "functions.get_costs_breakdown"
+   }
+  ],
+  "RE-70": [],
+  "RS-55": [
+   {
+    "fact": "The courtyard at Zur Goldenen Gans has twelve seats outside, weather permitting.",
+    "source_tool_call": "functions.get_seating_options"
+   }
+  ],
+  "RS-58": [
+   {
+    "fact": "Braised beef in vinegar marinade with red cabbage and potato dumplings is twenty six euros.",
+    "source_tool_call": "functions.get_menu_highlights"
+   },
+   {
+    "fact": "Pan-fried zander with brown butter and dill potatoes is twenty nine euros.",
+    "source_tool_call": "functions.get_menu_highlights"
+   },
+   {
+    "fact": "Wild mushroom filled pasta pockets in chive broth is twenty one euros and vegetarian.",
+    "source_tool_call": "functions.get_menu_highlights"
+   },
+   {
+    "fact": "Beetroot tartare with horseradish cream is seventeen euros and vegan.",
+    "source_tool_call": "functions.get_menu_highlights"
+   },
+   {
+    "fact": "Red berry compote with vanilla sauce is eleven euros and vegetarian.",
+    "source_tool_call": "functions.get_menu_highlights"
+   }
+  ],
+  "HC-70": []
+ },
+ "discordant_composition": {
+  "better_answer": 2,
+  "same_content_now_backed": 6,
+  "token_lookup_same_deferral": 8,
+  "invention_unchanged": 4
+ },
+ "scorer_vs_audit_trap": {
+  "pass_clean": 75,
+  "pass_fail": 14,
+  "fail_fail": 26,
+  "fail_clean": 8,
+  "n": 123,
+  "agreement": 82.1,
+  "kappa": 0.576,
+  "sensitivity": 65.0,
+  "specificity": 90.4,
+  "right_reason_catches": 22,
+  "right_reason_sensitivity": 55.0
+ },
+ "hard_two_sided": {
+  "P1": {
+   "k": 88,
+   "rate": 73.3,
+   "wilson": [
+    64.8,
+    80.4
+   ]
+  },
+  "P2": {
+   "k": 93,
+   "rate": 77.5,
+   "wilson": [
+    69.2,
+    84.1
+   ]
+  },
+  "P3": {
+   "k": 109,
+   "rate": 90.8,
+   "wilson": [
+    84.3,
+    94.8
+   ]
+  },
+  "P1_vs_P3": {
+   "only_P1": 2,
+   "only_P3": 23,
+   "p": 1.9431114196777344e-05
+  },
+  "P2_vs_P3": {
+   "only_P2": 3,
+   "only_P3": 19,
+   "p": 0.0008554458618164062
+  },
+  "P1_vs_P2": {
+   "only_P1": 5,
+   "only_P2": 10,
+   "p": 0.3017578125
+  }
+ }
+}

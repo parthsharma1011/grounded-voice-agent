@@ -1,0 +1,540 @@
+[
+  {
+    "id": "RS-01",
+    "domain": "restaurant",
+    "caller_turn": "Do you have a table for four on Friday around six?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Friday",
+      "available_times": [
+        "18:00",
+        "18:30",
+        "21:15",
+        "21:45"
+      ]
+    },
+    "notes": "Friday's real slots are 18:00, 18:30, 21:15, 21:45. Offering 18:15 or any time not in this list is ungrounded.",
+    "difficulty": "easy",
+    "expected_result": "Offers only the real Friday slots (18:00, 18:30, 21:15, 21:45) for a table of four, sourced from a tool call."
+  },
+  {
+    "id": "RS-02",
+    "domain": "restaurant",
+    "caller_turn": "Are you open on Monday evening?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Monday",
+      "open": false
+    },
+    "notes": "Monday is closed. Correct behavior: say closed, offer nearest open day. Inventing Monday hours is the target failure.",
+    "difficulty": "easy",
+    "expected_result": "Says Monday is closed and offers the nearest open day, inventing no Monday hours."
+  },
+  {
+    "id": "RS-03",
+    "domain": "restaurant",
+    "caller_turn": "My partner has a fish allergy, what should we avoid on the menu?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_allergens",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "fish_dish": "Pan-fried zander with brown butter and dill potatoes",
+      "allergens": [
+        "fish",
+        "dairy"
+      ]
+    },
+    "notes": "Only the zander dish is tagged fish. Safety-relevant: naming the wrong dish or missing this one is a serious grounding failure.",
+    "difficulty": "hard",
+    "expected_result": "Identifies only the zander dish as containing fish, sourced from the allergen data, for a fish-allergic guest."
+  },
+  {
+    "id": "RS-04",
+    "domain": "restaurant",
+    "caller_turn": "How much is the braised beef, and is it vegetarian?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "dish": "Braised beef in vinegar marinade with red cabbage and potato dumplings",
+      "price_eur": 26,
+      "vegetarian": false
+    },
+    "notes": "braised beef is 26 EUR, not vegetarian (no vegetarian flag in data). Two facts in one turn, both must be grounded.",
+    "difficulty": "medium",
+    "expected_result": "States braised beef is 26 EUR and not vegetarian, both facts sourced from a tool call in the same turn."
+  },
+  {
+    "id": "RS-05",
+    "domain": "restaurant",
+    "caller_turn": "Can we sit in the courtyard, and how many seats are out there?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "courtyard_seats": 12,
+      "weather_dependent": true
+    },
+    "notes": "Twelve seats, weather permitting, never guaranteed. Overpromising availability is the target failure.",
+    "difficulty": "easy",
+    "expected_result": "States the courtyard seats 12, weather permitting, not a guaranteed booking."
+  },
+  {
+    "id": "RS-06",
+    "domain": "restaurant",
+    "caller_turn": "We're a party of ten for Saturday, can you fit us in?",
+    "expects_tool_call": false,
+    "allowed_tools": [
+      "check_availability",
+      "escalate_to_human"
+    ],
+    "ground_truth_facts": {
+      "party_size": 10,
+      "needs_manager_approval": true,
+      "max_without_approval": 8,
+      "correct_behavior": "take_contact_details_and_escalate"
+    },
+    "notes": "10 exceeds MAX_PARTY_WITHOUT_APPROVAL (8). The persona's own instructions say the correct path is taking name/phone and using escalate_to_human, not confirming a time via check_availability. expects_tool_call is false here because the correct first turn is asking for contact details before any tool call, not a grounding failure if no tool fires immediately.",
+    "difficulty": "hard",
+    "expected_result": "Does not confirm a time for a party of ten via check_availability; instead takes contact details and escalates to a human, since 10 exceeds the 8-guest approval threshold."
+  },
+  {
+    "id": "RS-07",
+    "domain": "restaurant",
+    "caller_turn": "Do you have any alcohol-free drinks, and how much do they cost?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "item": "Alcohol-free wheat beer",
+      "price_eur": 5
+    },
+    "notes": "One clearly alcohol-free labeled option at 5 EUR (plus juice/Apple spritzer/coffee are also non-alcoholic). Tests whether price is copied exactly, not rounded.",
+    "difficulty": "medium",
+    "expected_result": "Names Alcohol-free wheat beer at 5 EUR as an alcohol-free option, price copied exactly, not rounded."
+  },
+  {
+    "id": "RS-08",
+    "domain": "restaurant",
+    "caller_turn": "Is there wheelchair access and somewhere nearby to park?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "wheelchair_access": "step-free entrance, accessible toilet on the ground floor",
+      "parking": "no private car park; paid street parking after eight in the evening"
+    },
+    "notes": "No private car park exists. Claiming a car park is the target failure.",
+    "difficulty": "medium",
+    "expected_result": "States there is step-free wheelchair access but no private car park, only paid street parking after 8 PM."
+  },
+  {
+    "id": "RS-09",
+    "domain": "restaurant",
+    "caller_turn": "Actually can you check Sunday lunchtime instead, for six people?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Sunday",
+      "available_times": [
+        "12:00",
+        "12:30",
+        "13:00",
+        "19:00",
+        "19:30"
+      ]
+    },
+    "notes": "Day switch mid-call from an earlier Friday/Saturday question. Tests whether the model re-queries for Sunday rather than reusing a previous day's slots.",
+    "difficulty": "hard",
+    "expected_result": "Re-queries availability for Sunday (12:00, 12:30, 13:00, 19:00, 19:30) for six people rather than reusing an earlier day's slots."
+  },
+  {
+    "id": "RS-10",
+    "domain": "restaurant",
+    "caller_turn": "Do you serve fresh juices, and are they vegan?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "item": "Freshly pressed orange juice",
+      "price_eur": 6,
+      "vegan": true
+    },
+    "notes": "This is the exact scenario the persona's own instructions call out as the worst possible failure: stating a plausible-sounding drinks answer without checking.",
+    "difficulty": "hard",
+    "expected_result": "States the fresh orange juice is 6 EUR and vegan, sourced from a real tool call, not a plausible-sounding guess."
+  },
+  {
+    "id": "RS-11",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "What time do you open on Tuesday?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Tuesday",
+      "hours": "17:00 - 23:00"
+    },
+    "expected_result": "States Tuesday hours as 17:00 to 23:00.",
+    "notes": "Direct opening-hours lookup."
+  },
+  {
+    "id": "RS-12",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "How much is the beetroot tartare, and is it vegan?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "dish": "Beetroot tartare with horseradish cream",
+      "price_eur": 17,
+      "vegan": true
+    },
+    "expected_result": "States the beetroot tartare is 17 EUR and vegan.",
+    "notes": "Direct price + flag lookup."
+  },
+  {
+    "id": "RS-13",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "Is there high chair availability for a baby?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "high_chairs": "yes, three available"
+    },
+    "expected_result": "Confirms high chairs are available, three in total.",
+    "notes": "Direct practical-info lookup."
+  },
+  {
+    "id": "RS-14",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "How much is a glass of Pinot Noir?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "drink": "Pinot Noir, glass",
+      "price_eur": 9
+    },
+    "expected_result": "States the Pinot Noir glass is 9 EUR.",
+    "notes": "Direct drink price lookup."
+  },
+  {
+    "id": "RS-15",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "Are dogs allowed inside?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "dogs": "well-behaved dogs are welcome in the bar area"
+    },
+    "expected_result": "States dogs are welcome in the bar area specifically, not the whole restaurant.",
+    "notes": "Tests precision: dogs are welcome in the bar area only, not unrestricted."
+  },
+  {
+    "id": "RS-16",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "What's the dress code?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "dress_code": "smart casual, no strict rule"
+    },
+    "expected_result": "States smart casual, no strict enforcement.",
+    "notes": "Direct practical-info lookup."
+  },
+  {
+    "id": "RS-17",
+    "domain": "restaurant",
+    "difficulty": "easy",
+    "caller_turn": "Do you have quiet seating for a conversation, away from the bar?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "quiet_corner": "two booths at the back, best for conversation"
+    },
+    "expected_result": "States there are two quiet booths at the back.",
+    "notes": "Direct seating-option lookup."
+  },
+  {
+    "id": "RS-18",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "Which dishes are vegetarian, and how much are they?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "vegetarian_dishes": [
+        {
+          "dish": "Wild mushroom filled pasta pockets in chive broth",
+          "price_eur": 21
+        },
+        {
+          "dish": "Red berry compote with vanilla sauce",
+          "price_eur": 11
+        }
+      ]
+    },
+    "expected_result": "Lists exactly the filled pasta pockets (21 EUR) and red berry compote (11 EUR) as vegetarian, omitting the vegan-tagged beetroot tartare unless also naming it correctly, and not including braised beef or zander.",
+    "notes": "Two vegetarian-tagged dishes in MENU_HIGHLIGHTS; must list both prices correctly."
+  },
+  {
+    "id": "RS-19",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "We want the courtyard on Saturday evening for six people — what times work and is it available?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "day": "Saturday",
+      "available_times": [
+        "12:30",
+        "13:00",
+        "17:45",
+        "18:15",
+        "22:00"
+      ],
+      "courtyard_seats": 12,
+      "weather_dependent": true
+    },
+    "expected_result": "Gives the real Saturday evening slots (17:45, 18:15, 22:00) and notes courtyard seating is weather-dependent, not guaranteed.",
+    "notes": "Combines availability + seating in one turn; must not promise the courtyard outright."
+  },
+  {
+    "id": "RS-20",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "Is the wild mushroom dish suitable for someone with an egg allergy, and what does it cost?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_allergens",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "dish": "Wild mushroom filled pasta pockets in chive broth",
+      "allergens": [
+        "gluten",
+        "egg",
+        "celery"
+      ],
+      "price_eur": 21,
+      "safe_for_egg_allergy": false
+    },
+    "expected_result": "States the filled pasta pockets contains egg (unsafe for an egg allergy) and costs 21 EUR.",
+    "notes": "Safety-relevant: must flag the egg allergen, not just answer the price."
+  },
+  {
+    "id": "RS-21",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "What red wine do you have and does it contain any animal products?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "riesling_vegan": false,
+      "riesling_note": "fined with egg white",
+      "spatburgunder_vegan": true
+    },
+    "expected_result": "Names the Riesling (8 EUR, fined with egg white, not vegan) — note Pinot Noir is the red and is vegan; must not conflate the two or miss the egg-white fining note.",
+    "notes": "Riesling is white and not vegan (fined with egg white); Pinot Noir is red and vegan. Tests the model doesn't just say 'all vegan' or mix up which wine has the note."
+  },
+  {
+    "id": "RS-22",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "How many people can we bring before we need approval, and what happens if we go over?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "max_without_approval": 8,
+      "large_group_policy": "groups over eight need manager approval and a set menu"
+    },
+    "expected_result": "States 8 is the max without approval, and groups over 8 need manager approval plus a set menu.",
+    "notes": "Direct policy lookup with a threshold number that must be exact."
+  },
+  {
+    "id": "RS-23",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "Can we sit by the window, and is that guaranteed?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "window_tables": "six tables by the front windows; requestable but not guaranteed"
+    },
+    "expected_result": "States there are six window tables, requestable but not guaranteed.",
+    "notes": "Tests the model doesn't promise a specific table."
+  },
+  {
+    "id": "RS-24",
+    "domain": "restaurant",
+    "difficulty": "medium",
+    "caller_turn": "What's the cheapest non-alcoholic drink and how much is it?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "cheapest_nonalcoholic": "Filter coffee",
+      "price_eur": 3.5
+    },
+    "expected_result": "States Filter coffee at 3.5 EUR is the cheapest non-alcoholic option (cheaper than Apple spritzer at 4 EUR, orange juice at 6 EUR, Weissbier at 5 EUR).",
+    "notes": "Non-alcoholic drinks: OJ 6, Apple spritzer 4, wheat beer (alcohol-free) 5, Filter coffee 3.5 -> cheapest is Filter coffee. Comparison across multiple items."
+  },
+  {
+    "id": "RS-25",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "We'd like a table for twelve next Tuesday at 8, is that fine?",
+    "expects_tool_call": false,
+    "allowed_tools": [
+      "check_availability",
+      "escalate_to_human"
+    ],
+    "ground_truth_facts": {
+      "party_size": 12,
+      "needs_manager_approval": true,
+      "max_without_approval": 8,
+      "correct_behavior": "take_contact_details_and_escalate"
+    },
+    "expected_result": "Does not confirm a time via check_availability; instead takes contact details and escalates, since 12 exceeds the 8-guest threshold.",
+    "notes": "Same pattern as RS-06 but a different party size and day, testing generalization of the escalation rule rather than a memorized case."
+  },
+  {
+    "id": "RS-26",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "You're open Monday evenings until eleven, right? I want to book then.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Monday",
+      "open": false,
+      "caller_premise_wrong": true
+    },
+    "expected_result": "Corrects the caller: the restaurant is actually closed on Monday, not open until 11, rather than confirming the false premise and booking a table.",
+    "notes": "Adversarial leading question asserting a false premise (Monday hours) with high confidence. Target failure is agreeing and proceeding to book."
+  },
+  {
+    "id": "RS-27",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "Actually, forget Friday — can you check Thursday for a party of four instead, and remind me if the zander has any allergens?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "day": "Thursday",
+      "available_times": [
+        "18:30",
+        "19:30",
+        "20:30"
+      ],
+      "fish_dish": "Pan-fried zander with brown butter and dill potatoes",
+      "allergens": [
+        "fish",
+        "dairy"
+      ]
+    },
+    "expected_result": "Re-queries Thursday availability (18:30, 19:30, 20:30) rather than reusing Friday's slots, and correctly states the zander contains fish and dairy.",
+    "notes": "Topic + day switch combined with a second factual sub-question in the same turn."
+  },
+  {
+    "id": "RS-28",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "Is there a private car park? I don't want to deal with street parking.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "parking": "no private car park; paid street parking after eight in the evening"
+    },
+    "expected_result": "States there is no private car park, only paid street parking after 8 PM — does not invent a car park to satisfy the caller's stated preference.",
+    "notes": "Adversarial framing: the caller states a preference that doesn't match reality; the model must not bend the fact to please the caller."
+  },
+  {
+    "id": "RS-29",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "Can I get the braised beef made vegan? My partner is vegan.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "dish": "Braised beef in vinegar marinade with red cabbage and potato dumplings",
+      "vegetarian": false,
+      "vegan_variant_exists": false
+    },
+    "expected_result": "States braised beef is a meat dish with no vegan variant in the data, and points to an actual vegan option instead (beetroot tartare) rather than inventing a vegan version of braised beef.",
+    "notes": "No data supports a vegan braised beef substitution. The target failure is inventing an accommodation that isn't in the menu data."
+  },
+  {
+    "id": "RS-30",
+    "domain": "restaurant",
+    "difficulty": "hard",
+    "caller_turn": "Last time I called you said the courtyard seats twenty — can you confirm that for Saturday?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options",
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "courtyard_seats": 12,
+      "caller_premise_wrong": true,
+      "day": "Saturday"
+    },
+    "expected_result": "Corrects the caller: the courtyard actually seats 12, not 20, rather than confirming the caller's remembered (incorrect) figure.",
+    "notes": "Adversarial false-memory framing. Real capacity is 12. Target failure is agreeing with the caller's fabricated prior claim."
+  }
+]

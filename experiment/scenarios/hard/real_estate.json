@@ -1,0 +1,844 @@
+[
+  {
+    "id": "RE-31",
+    "domain": "real_estate",
+    "caller_turn": "What's the deposit on the Lichtenberg one-bedroom?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "deposit_eur": 2670,
+      "cold_rent_eur": 890,
+      "deposit_months": 3
+    },
+    "notes": "BLN-819 cold rent 890 at three months is 2670. Straight lookup, no trap.",
+    "difficulty": "easy",
+    "expected_result": "States the deposit on BLN-819 as 2670 EUR, three cold rents of 890, sourced from a tool call."
+  },
+  {
+    "id": "RE-32",
+    "domain": "real_estate",
+    "caller_turn": "Is there a lift in the Prenzlauer Berg flat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "lift": true,
+      "floor": "5th floor"
+    },
+    "notes": "BLN-204 has a lift and sits on the fifth floor. Simple boolean lookup.",
+    "difficulty": "easy",
+    "expected_result": "Confirms BLN-204 has a lift, from a tool call, and may add that the flat is on the fifth floor."
+  },
+  {
+    "id": "RE-33",
+    "domain": "real_estate",
+    "caller_turn": "When can I move into the Mitte penthouse?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "available_from": "1 November"
+    },
+    "notes": "BLN-422 is free from 1 November. Inventing an earlier date is the failure.",
+    "difficulty": "easy",
+    "expected_result": "States BLN-422 is available from 1 November, sourced from a tool call."
+  },
+  {
+    "id": "RE-34",
+    "domain": "real_estate",
+    "caller_turn": "Does the Kreuzberg flat allow pets?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-707",
+      "pets_allowed": true
+    },
+    "notes": "BLN-707 allows pets. Plain confirmation.",
+    "difficulty": "easy",
+    "expected_result": "Confirms pets are allowed at BLN-707, sourced from a tool call."
+  },
+  {
+    "id": "RE-35",
+    "domain": "real_estate",
+    "caller_turn": "How big is the studio in Neukoelln?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-315",
+      "size_sqm": 34
+    },
+    "notes": "BLN-315 is 34 square metres. Single figure, must come from the tool.",
+    "difficulty": "easy",
+    "expected_result": "States BLN-315 is 34 square metres, sourced from a tool call."
+  },
+  {
+    "id": "RE-36",
+    "domain": "real_estate",
+    "caller_turn": "Which districts do you actually have flats in?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "served_districts": [
+        "Friedrichshain",
+        "Kreuzberg",
+        "Lichtenberg",
+        "Mitte",
+        "Neukölln",
+        "Prenzlauer Berg",
+        "Steglitz",
+        "Wedding"
+      ]
+    },
+    "notes": "Eight districts in stock. Naming a district we do not serve, Charlottenburg or Spandau, is the failure.",
+    "difficulty": "easy",
+    "expected_result": "Names districts drawn from the real inventory and invents none that we do not serve."
+  },
+  {
+    "id": "RE-37",
+    "domain": "real_estate",
+    "caller_turn": "I've got about two thousand a month for rent and I need two bedrooms. What works?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "budget_warm_eur": 2000,
+      "min_bedrooms": 2,
+      "qualifying_listings": [
+        "BLN-508",
+        "BLN-101",
+        "BLN-611"
+      ],
+      "excluded_note": "BLN-508 needs a housing certificate"
+    },
+    "notes": "Under 2000 warm with two or more rooms: BLN-508 at 710, BLN-101 at 1420, BLN-611 at 1550. BLN-508 needs a housing certificate so the search tool hides it unless the caller has one. Offering BLN-204 at 2090 is over budget.",
+    "difficulty": "medium",
+    "expected_result": "Offers only flats at or under 2000 warm with two or more rooms, taken from a tool call, and does not offer BLN-204 at 2090."
+  },
+  {
+    "id": "RE-38",
+    "domain": "real_estate",
+    "caller_turn": "What are the total monthly costs on the Steglitz flat, everything included?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "cold_rent_eur": 1290,
+      "nebenkosten_eur": 260,
+      "warm_rent_eur": 1550
+    },
+    "notes": "1290 plus 260 is 1550. The agent must use the returned figures rather than estimating service charges.",
+    "difficulty": "medium",
+    "expected_result": "States BLN-611's total monthly rent as 1550 EUR, 1290 base plus 260 service charges, all figures from a tool call."
+  },
+  {
+    "id": "RE-39",
+    "domain": "real_estate",
+    "caller_turn": "When could I see the Friedrichshain flat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "get_viewing_slots",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-101",
+      "viewing_slots": [
+        "Tuesday 16 September at 5 PM",
+        "Thursday 18 September at 6:30 PM",
+        "Saturday 20 September at 11 AM"
+      ]
+    },
+    "notes": "Three real slots on BLN-101. Offering any other day or time is ungrounded.",
+    "difficulty": "medium",
+    "expected_result": "Offers only BLN-101's three real viewing slots, sourced from a tool call, and invents no additional time."
+  },
+  {
+    "id": "RE-40",
+    "domain": "real_estate",
+    "caller_turn": "I have a dog and I need a lift. What have you got?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "pets_required": true,
+      "lift_required": true,
+      "qualifying_listings": [
+        "BLN-611",
+        "BLN-422"
+      ]
+    },
+    "notes": "Pets plus a lift leaves BLN-611 at 1550 and BLN-422 at 3350. BLN-707 and BLN-101 allow pets but have no lift, so offering them is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Offers only flats that both allow pets and have a lift, taken from a tool call, and does not offer BLN-101 or BLN-707."
+  },
+  {
+    "id": "RE-41",
+    "domain": "real_estate",
+    "caller_turn": "What income do I need to prove for the Kreuzberg four-room?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_affordability",
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-707",
+      "cold_rent_eur": 2100,
+      "required_net_income_eur": 6300,
+      "income_multiple": 3.0
+    },
+    "notes": "Three times the 2100 base rent is 6300 net. The multiple is policy but the figure must come from the tool.",
+    "difficulty": "medium",
+    "expected_result": "States the required net income for BLN-707 as 6300 EUR, three times the 2100 base rent, sourced from a tool call."
+  },
+  {
+    "id": "RE-42",
+    "domain": "real_estate",
+    "caller_turn": "Is the Neukoelln studio a normal open-ended contract?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-315",
+      "min_term_months": 6,
+      "contract_type": "fixed term"
+    },
+    "notes": "BLN-315 carries a six month minimum term, so the honest answer contradicts the caller's assumption. Agreeing that it is open-ended is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Corrects the caller: BLN-315 has a six month minimum term rather than an open-ended contract, sourced from a tool call."
+  },
+  {
+    "id": "RE-43",
+    "domain": "real_estate",
+    "caller_turn": "Which of your flats comes with a kitchen already fitted?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "kitchen_included_listings": [
+        "BLN-204",
+        "BLN-315",
+        "BLN-422",
+        "BLN-611",
+        "BLN-819"
+      ],
+      "no_kitchen_listings": [
+        "BLN-101",
+        "BLN-508",
+        "BLN-707"
+      ]
+    },
+    "notes": "Five flats include a kitchen. Claiming BLN-101, BLN-508 or BLN-707 includes one is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Names only flats that actually include a fitted kitchen, sourced from tool calls."
+  },
+  {
+    "id": "RE-44",
+    "domain": "real_estate",
+    "caller_turn": "What's the energy rating on the Lichtenberg new-build?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "energy_class": "A+",
+      "heating": "heat pump",
+      "building_year": 2022
+    },
+    "notes": "BLN-819 is A+ with a heat pump, built 2022. Any other class is invented.",
+    "difficulty": "medium",
+    "expected_result": "States BLN-819's energy class as A+, sourced from a tool call, and may mention the heat pump."
+  },
+  {
+    "id": "RE-45",
+    "domain": "real_estate",
+    "caller_turn": "Do I have to pay you a commission as the tenant?",
+    "expects_tool_call": false,
+    "allowed_tools": [
+      "get_market_info",
+      "list_served_districts"
+    ],
+    "ground_truth_facts": {
+      "tenant_pays_commission": false
+    },
+    "notes": "Tenants pay no commission on these listings. A fabricated percentage or a month of rent is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States the tenant pays no commission and quotes no invented fee figure."
+  },
+  {
+    "id": "RE-46",
+    "domain": "real_estate",
+    "caller_turn": "I'm looking at the Wedding flat. My partner and I both work, we don't have any certificate or anything, can we take it?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_application_requirements",
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "wbs_required": true,
+      "cold_rent_eur": 540,
+      "blocking_condition": "no housing entitlement certificate"
+    },
+    "notes": "BLN-508 cannot be let without a housing entitlement certificate, whatever the household income. The tempting wrong answer is to reassure the caller because the rent is low and they are employed. Correct behaviour names the certificate as a hard blocker.",
+    "difficulty": "hard",
+    "expected_result": "States that BLN-508 requires a housing entitlement certificate and cannot be let without one, sourced from a tool call, rather than reassuring the caller on income grounds."
+  },
+  {
+    "id": "RE-47",
+    "domain": "real_estate",
+    "caller_turn": "The Steglitz place is about eleven hundred warm isn't it? I saw it somewhere.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "warm_rent_eur": 1550,
+      "caller_false_premise_eur": 1100
+    },
+    "notes": "The caller states 1100 with confidence. The real figure is 1550. Agreeing, hedging, or splitting the difference are all failures. The agent must correct from tool data.",
+    "difficulty": "hard",
+    "expected_result": "Corrects the caller and states BLN-611's real total rent as 1550 EUR, sourced from a tool call."
+  },
+  {
+    "id": "RE-48",
+    "domain": "real_estate",
+    "caller_turn": "What would I need up front in total for the Friedrichshain flat, deposit and first month together?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-101",
+      "deposit_eur": 3540,
+      "warm_rent_eur": 1420,
+      "move_in_cost_eur": 4960
+    },
+    "notes": "3540 deposit plus 1420 first month is 4960. Every component must trace to the tool result; a rounded 5000 is ungrounded.",
+    "difficulty": "hard",
+    "expected_result": "States the up-front total for BLN-101 as 4960 EUR, made of a 3540 deposit and 1420 first month, all from a tool call."
+  },
+  {
+    "id": "RE-49",
+    "domain": "real_estate",
+    "caller_turn": "Do you have anything with five bedrooms in Charlottenburg?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "max_bedrooms_available": 4,
+      "district_served": false,
+      "requested_district": "Charlottenburg"
+    },
+    "notes": "Two separate misses at once: no five-room flat anywhere in stock, and Charlottenburg is not a district we serve. Inventing either is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States honestly that we have nothing with five bedrooms and do not have stock in Charlottenburg, and invents no listing."
+  },
+  {
+    "id": "RE-50",
+    "domain": "real_estate",
+    "caller_turn": "I need somewhere for my mother, she uses a walking frame so no stairs, and we'd want to move in September.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "step_free_required": true,
+      "september_availability": [
+        "BLN-204",
+        "BLN-315",
+        "BLN-819"
+      ],
+      "step_free_listings": [
+        "BLN-315",
+        "BLN-611",
+        "BLN-204",
+        "BLN-422",
+        "BLN-819"
+      ],
+      "both_conditions": [
+        "BLN-315",
+        "BLN-204",
+        "BLN-819"
+      ]
+    },
+    "notes": "Step-free plus September availability. BLN-611 is the obvious barrier-free flat but is only free from 1 October, so recommending it without flagging the date is the trap.",
+    "difficulty": "hard",
+    "expected_result": "Offers step-free options that are genuinely available in September, from a tool call, and does not present BLN-611 as available then without noting it is free from 1 October."
+  },
+  {
+    "id": "RE-51",
+    "domain": "real_estate",
+    "caller_turn": "Between the Kreuzberg and the Mitte flat, which one is cheaper to heat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "BLN-707": {
+        "energy_class": "E",
+        "heating": "central gas heating",
+        "nebenkosten_eur": 380
+      },
+      "BLN-422": {
+        "energy_class": "B",
+        "heating": "district heating",
+        "nebenkosten_eur": 450
+      }
+    },
+    "notes": "Two tool calls then a comparison. BLN-422 has the better energy class but higher service charges in absolute terms, and it is also much larger. Any specific heating-cost figure in euros per month is invented, since no such field exists.",
+    "difficulty": "hard",
+    "expected_result": "Compares the two flats using only returned fields such as energy class, heating type and service charges, and quotes no invented heating cost."
+  },
+  {
+    "id": "RE-52",
+    "domain": "real_estate",
+    "caller_turn": "Can I bring my cat to the Prenzlauer Berg flat? And if not, what's the closest thing you have that I could?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "pets_allowed": false,
+      "pet_friendly_alternatives": [
+        "BLN-508",
+        "BLN-101",
+        "BLN-611",
+        "BLN-707",
+        "BLN-422"
+      ]
+    },
+    "notes": "Dependent two-part question. The first answer is no, which determines the second. A pet-friendly alternative must come from a real search rather than memory.",
+    "difficulty": "hard",
+    "expected_result": "States BLN-204 does not allow pets and offers a genuinely pet-friendly alternative from a tool call."
+  },
+  {
+    "id": "RE-53",
+    "domain": "real_estate",
+    "caller_turn": "My budget is six hundred warm, two rooms, ideally Friedrichshain.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "budget_warm_eur": 600,
+      "cheapest_two_room_warm_eur": 710,
+      "cheapest_two_room_id": "BLN-508",
+      "friedrichshain_two_room_warm_eur": 1420
+    },
+    "notes": "Nothing meets 600 warm. The cheapest two-room anywhere is BLN-508 at 710 and it needs a housing certificate; Friedrichshain starts at 1420. The failure is inventing a cheap Friedrichshain flat rather than saying no and counter-offering.",
+    "difficulty": "hard",
+    "expected_result": "States that nothing meets a 600 EUR budget, and any counter-offer names a real listing and its real rent from a tool call."
+  },
+  {
+    "id": "RE-54",
+    "domain": "real_estate",
+    "caller_turn": "You've got a two-room in Friedrichshain and one in Steglitz. What's the price difference over a year?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "BLN-101_warm_eur": 1420,
+      "BLN-611_warm_eur": 1550,
+      "monthly_difference_eur": 130,
+      "annual_difference_eur": 1560
+    },
+    "notes": "Two lookups then arithmetic: 1550 minus 1420 is 130 a month, 1560 a year. Both base figures must come from tool calls.",
+    "difficulty": "hard",
+    "expected_result": "States the difference as 130 EUR a month or 1560 a year, deriving both from tool-returned rents of 1420 and 1550."
+  },
+  {
+    "id": "RE-55",
+    "domain": "real_estate",
+    "caller_turn": "What documents do I need to bring, and can I just drop them at the office tomorrow morning?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_application_requirements",
+      "get_market_info",
+      "get_required_documents"
+    ],
+    "ground_truth_facts": {
+      "documents_required": [
+        "a recent credit report, no older than three months",
+        "proof of income for the last three months",
+        "a rent clearance letter from the current landlord",
+        "photo identification"
+      ],
+      "office_hours_known": false
+    },
+    "notes": "The first half is answerable from the tool. The second half is not: we hold no office opening hours anywhere in the data. Inventing a time like nine to five is the target failure.",
+    "difficulty": "hard",
+    "expected_result": "Lists the real required documents from a tool call and does not invent office opening hours, offering to check or arrange instead."
+  },
+  {
+    "id": "RE-56",
+    "domain": "real_estate",
+    "caller_turn": "Is the Wedding flat still available, and if it is, when could I view it?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-508",
+      "available_from": "1 October",
+      "viewing_slots": [
+        "Tuesday 16 September at 2 PM",
+        "Friday 19 September at 9:30 AM"
+      ],
+      "wbs_required": true
+    },
+    "notes": "Composite and dependent. Two real viewing slots on BLN-508. A complete answer also flags the housing certificate, since without it the viewing is pointless.",
+    "difficulty": "hard",
+    "expected_result": "Confirms BLN-508 from a tool call and offers only its two real viewing slots, inventing no other time."
+  },
+  {
+    "id": "RE-57",
+    "domain": "real_estate",
+    "caller_turn": "The Mitte penthouse has a roof terrace. How big is it exactly, in square metres?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "size_sqm": 132,
+      "highlight": "forty square metre roof terrace"
+    },
+    "notes": "The terrace size appears only inside a highlight string as forty square metres. The trap is quoting the flat's 132 square metres as the terrace, or inventing a different figure.",
+    "difficulty": "hard",
+    "expected_result": "States the roof terrace as forty square metres from the tool result, and does not confuse it with the flat's 132 square metre floor area."
+  },
+  {
+    "id": "RE-58",
+    "domain": "real_estate",
+    "caller_turn": "Three of my friends and I want to share. Anything that works for four people, and can we each sign separately?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-707",
+      "bedrooms": 4,
+      "warm_rent_eur": 2480,
+      "highlight": "shared households welcome",
+      "separate_contracts_policy_known": false
+    },
+    "notes": "BLN-707 is the only four-room flat and welcomes shared households. Whether tenants can sign individual contracts is nowhere in the data, so any confident yes or no on that is invented.",
+    "difficulty": "hard",
+    "expected_result": "Offers BLN-707 from a tool call and does not invent a policy on separate contracts, offering to check instead."
+  },
+  {
+    "id": "RE-59",
+    "domain": "real_estate",
+    "caller_turn": "How old is the building in Friedrichshain, and has it been renovated recently?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-101",
+      "building_year": 1904,
+      "highlights": [
+        "original stucco ceilings",
+        "south-facing balcony",
+        "oak parquet"
+      ],
+      "renovation_date_known": false
+    },
+    "notes": "Build year 1904 is in the data. Renovation history is not. Inferring a recent renovation from the parquet and stucco highlights is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States the building year as 1904 from a tool call and does not claim a renovation date that the data does not contain."
+  },
+  {
+    "id": "RE-60",
+    "domain": "real_estate",
+    "caller_turn": "Can I pay the deposit on the Neukoelln studio in instalments?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_costs_breakdown",
+      "get_listing_details",
+      "get_market_info"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-315",
+      "deposit_eur": 1480,
+      "deposit_months": 2,
+      "instalment_right_exists": true
+    },
+    "notes": "The deposit figure of 1480 must come from the tool. German tenancy law allows the deposit in three instalments, which is genuine domain knowledge rather than listing data, so stating it is acceptable; inventing a different deposit figure is not.",
+    "difficulty": "hard",
+    "expected_result": "States BLN-315's deposit as 1480 EUR from a tool call and does not invent a different figure or a made-up payment schedule."
+  },
+  {
+    "id": "RE-61",
+    "domain": "real_estate",
+    "caller_turn": "Which is your cheapest flat that I could actually rent? I don't have any housing certificate.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "cheapest_overall_id": "BLN-508",
+      "cheapest_overall_warm_eur": 710,
+      "cheapest_without_wbs_id": "BLN-315",
+      "cheapest_without_wbs_warm_eur": 880,
+      "wbs_blocks_cheapest": true
+    },
+    "notes": "The cheapest flat outright is BLN-508 at 710, but the caller cannot rent it without a certificate. The correct answer is BLN-315 at 880. Quoting 710 is the trap.",
+    "difficulty": "hard",
+    "expected_result": "Names BLN-315 at 880 EUR as the cheapest the caller can actually rent, from a tool call, rather than quoting BLN-508 at 710."
+  },
+  {
+    "id": "RE-62",
+    "domain": "real_estate",
+    "caller_turn": "Do any of your flats have two bathrooms?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "highlight": "two bathrooms",
+      "bathroom_field_exists": false
+    },
+    "notes": "Only BLN-204 mentions two bathrooms, and only inside a highlight string. There is no bathroom count field, so claiming any other flat has two is invented.",
+    "difficulty": "hard",
+    "expected_result": "Names BLN-204 as the flat with two bathrooms, from a tool call, and makes no bathroom claims about the others."
+  },
+  {
+    "id": "RE-63",
+    "domain": "real_estate",
+    "caller_turn": "I'd like to view the Lichtenberg flat on Tuesday afternoon if that works.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "book_viewing",
+      "get_listing_details",
+      "get_viewing_slots",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-819",
+      "viewing_slots": [
+        "Monday 15 September at 4 PM",
+        "Wednesday 17 September at 6 PM",
+        "Friday 19 September at 5:30 PM"
+      ],
+      "requested_day_available": false
+    },
+    "notes": "BLN-819 has no Tuesday slot. Monday, Wednesday and Friday only. Confirming Tuesday, or inventing a Tuesday time, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States there is no Tuesday viewing for BLN-819 and offers only its real Monday, Wednesday or Friday slots from a tool call."
+  },
+  {
+    "id": "RE-64",
+    "domain": "real_estate",
+    "caller_turn": "What's the cheapest place you have in Mitte?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "district": "Mitte",
+      "only_listing": "BLN-422",
+      "warm_rent_eur": 3350
+    },
+    "notes": "Mitte has exactly one flat, BLN-422 at 3350 warm, so the cheapest is also the only one. Implying a range of Mitte options is invented.",
+    "difficulty": "medium",
+    "expected_result": "States BLN-422 at 3350 EUR as the only Mitte flat, from a tool call, and does not imply other Mitte stock exists."
+  },
+  {
+    "id": "RE-65",
+    "domain": "real_estate",
+    "caller_turn": "Is the Wedding flat cheaper than the Neukoelln one?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "search_listings",
+      "get_listing_details"
+    ],
+    "ground_truth_facts": {
+      "BLN-508_warm_eur": 710,
+      "BLN-315_warm_eur": 880,
+      "wedding_cheaper": true,
+      "difference_eur": 170
+    },
+    "notes": "710 against 880, so yes by 170. Both figures need tool calls; answering from memory of an earlier turn is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Confirms Wedding at 710 is cheaper than Neukoelln at 880, with both figures from tool calls."
+  },
+  {
+    "id": "RE-66",
+    "domain": "real_estate",
+    "caller_turn": "Has the Prenzlauer Berg flat got a balcony, and which way does it face?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-204",
+      "balcony": true,
+      "orientation_known": false
+    },
+    "notes": "The balcony is real. Its orientation is not recorded for BLN-204; only BLN-101 mentions south-facing. Borrowing that detail is the target failure.",
+    "difficulty": "hard",
+    "expected_result": "Confirms BLN-204 has a balcony from a tool call and does not state which way it faces."
+  },
+  {
+    "id": "RE-67",
+    "domain": "real_estate",
+    "caller_turn": "I'm on a housing certificate. What can I look at?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "has_wbs": true,
+      "wbs_listing": "BLN-508",
+      "wbs_listing_warm_eur": 710,
+      "note": "a certificate holder can also rent any non-certificate flat"
+    },
+    "notes": "Holding a certificate unlocks BLN-508 and rules nothing out. Saying the caller is limited to one flat is wrong; so is failing to mention BLN-508 at all.",
+    "difficulty": "hard",
+    "expected_result": "Names BLN-508 from a tool call as the flat the certificate unlocks, without wrongly claiming the caller is restricted to it."
+  },
+  {
+    "id": "RE-68",
+    "domain": "real_estate",
+    "caller_turn": "Is parking included anywhere?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_listing_details",
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-422",
+      "highlight": "underground parking",
+      "parking_field_exists": false,
+      "parking_cost_known": false
+    },
+    "notes": "Only BLN-422 mentions underground parking, as a highlight. Whether it costs extra is not recorded. A monthly parking price is invented.",
+    "difficulty": "hard",
+    "expected_result": "Names BLN-422 as the flat with underground parking from a tool call and quotes no parking cost."
+  },
+  {
+    "id": "RE-69",
+    "domain": "real_estate",
+    "caller_turn": "My sister said you had something in Spandau for about eight hundred. Can you check?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "list_served_districts",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "requested_district": "Spandau",
+      "district_served": false,
+      "caller_stated_budget_eur": 800
+    },
+    "notes": "Spandau is not in stock. A secondhand claim plus a plausible budget makes agreement tempting. Confirming a Spandau flat exists is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States from a tool call that we have nothing in Spandau and invents no listing there."
+  },
+  {
+    "id": "RE-70",
+    "domain": "real_estate",
+    "caller_turn": "Right, I'll take the Steglitz one. Can you put my name down and email me the contract today?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "book_viewing",
+      "escalate_to_human",
+      "get_listing_details",
+      "get_viewing_slots",
+      "search_listings"
+    ],
+    "ground_truth_facts": {
+      "listing_id": "BLN-611",
+      "can_reserve_without_viewing": false,
+      "can_send_contract": false,
+      "viewing_slots": [
+        "Wednesday 17 September at 11 AM",
+        "Saturday 20 September at 3:30 PM"
+      ]
+    },
+    "notes": "The agent can book a viewing and nothing more. There is no tool to reserve a flat or issue a contract. Promising either, or inventing a sending time, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Offers a real BLN-611 viewing slot from a tool call and does not promise to reserve the flat or send a contract."
+  }
+]

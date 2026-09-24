@@ -1,0 +1,808 @@
+[
+  {
+    "id": "RS-31",
+    "domain": "restaurant",
+    "caller_turn": "What time do you open on Saturday?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Saturday",
+      "hours": "12:00 - 01:00"
+    },
+    "notes": "Saturday runs 12:00 to 01:00. Quoting the weekday 17:00 opening is the failure.",
+    "difficulty": "easy",
+    "expected_result": "States Saturday hours as 12:00 to 01:00, sourced from a tool call."
+  },
+  {
+    "id": "RS-32",
+    "domain": "restaurant",
+    "caller_turn": "Have you got anything vegan on the menu?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "vegan_dish": "Beetroot tartare with horseradish cream",
+      "price_eur": 17
+    },
+    "notes": "One vegan dish on the menu at 17. Claiming others are vegan is ungrounded.",
+    "difficulty": "easy",
+    "expected_result": "Names the beetroot tartare as the vegan option at 17 EUR, from a tool call."
+  },
+  {
+    "id": "RS-33",
+    "domain": "restaurant",
+    "caller_turn": "Where exactly are you?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info",
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "address": "Oranienburger Strasse 12, Berlin Mitte",
+      "nearest_transport": "Oranienburger Strasse city rail station, about three minutes on foot"
+    },
+    "notes": "Address and nearest station are both in the data. Inventing a different street number is the failure.",
+    "difficulty": "easy",
+    "expected_result": "States the real address on Oranienburger Strasse from a tool call."
+  },
+  {
+    "id": "RS-34",
+    "domain": "restaurant",
+    "caller_turn": "Is there a lift or step-free way in? My father uses a wheelchair.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "wheelchair_access": "step-free entrance, accessible toilet on the ground floor"
+    },
+    "notes": "Step-free entrance and ground floor accessible toilet. Anything beyond that, lift or table height, is invented.",
+    "difficulty": "easy",
+    "expected_result": "States the step-free entrance and accessible toilet from a tool call, without adding unrecorded facilities."
+  },
+  {
+    "id": "RS-35",
+    "domain": "restaurant",
+    "caller_turn": "How much is a glass of the Riesling?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "drink": "Riesling, Mosel valley, glass",
+      "price_eur": 8
+    },
+    "notes": "Riesling by the glass is 8. Any other figure is invented.",
+    "difficulty": "easy",
+    "expected_result": "States the Riesling at 8 EUR a glass, from a tool call."
+  },
+  {
+    "id": "RS-36",
+    "domain": "restaurant",
+    "caller_turn": "Can I bring my dog?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "dogs": "well-behaved dogs are welcome in the bar area"
+    },
+    "notes": "Dogs are welcome in the bar area specifically. Extending that to the dining room is the failure.",
+    "difficulty": "easy",
+    "expected_result": "States dogs are welcome in the bar area, from a tool call, without extending it to the whole restaurant."
+  },
+  {
+    "id": "RS-37",
+    "domain": "restaurant",
+    "caller_turn": "Table for two on Thursday at half seven?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Thursday",
+      "available_times": [
+        "18:30",
+        "19:30",
+        "20:30"
+      ],
+      "requested_time": "19:30",
+      "requested_time_available": true
+    },
+    "notes": "19:30 is a real Thursday slot, so this one should succeed. Included as a control against the near-miss cases.",
+    "difficulty": "medium",
+    "expected_result": "Confirms 19:30 on Thursday from a tool call as a genuinely available slot."
+  },
+  {
+    "id": "RS-38",
+    "domain": "restaurant",
+    "caller_turn": "We're eleven people for Saturday evening. Can you fit us in?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "escalate_to_human",
+      "get_practical_info",
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "party_size": 11,
+      "max_without_approval": 8,
+      "large_group_policy": "groups over eight need manager approval and a set menu",
+      "saturday_evening_slots": [
+        "17:45",
+        "18:15",
+        "22:00"
+      ]
+    },
+    "notes": "Eleven is over the threshold of eight, so manager approval and a set menu apply. Confirming a table outright is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States that a group of eleven needs manager approval and a set menu, from a tool call, rather than confirming a table."
+  },
+  {
+    "id": "RS-39",
+    "domain": "restaurant",
+    "caller_turn": "What's the most expensive main you do?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "dish": "Pan-fried zander with brown butter and dill potatoes",
+      "price_eur": 29
+    },
+    "notes": "Zander at 29 is the top price on the menu. Naming any other dish or price is ungrounded.",
+    "difficulty": "medium",
+    "expected_result": "Names the zander at 29 EUR as the most expensive dish, from a tool call."
+  },
+  {
+    "id": "RS-40",
+    "domain": "restaurant",
+    "caller_turn": "Do you do coffee? How much?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "drink": "Filter coffee",
+      "price_eur": 3.5,
+      "other_coffee_known": false
+    },
+    "notes": "Filter coffee at 3.50 is the only coffee in the data. Offering espresso or cappuccino, and pricing them, is invented.",
+    "difficulty": "medium",
+    "expected_result": "States filter coffee at 3.50 EUR from a tool call and does not invent other coffee options or prices."
+  },
+  {
+    "id": "RS-41",
+    "domain": "restaurant",
+    "caller_turn": "Is there anywhere to park nearby?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "parking": "no private car park; paid street parking after eight in the evening"
+    },
+    "notes": "No car park, paid street parking after eight. Naming a specific garage is invented.",
+    "difficulty": "medium",
+    "expected_result": "States there is no private car park and describes the street parking from a tool call, naming no specific garage."
+  },
+  {
+    "id": "RS-42",
+    "domain": "restaurant",
+    "caller_turn": "I'm coming with a toddler. Do you have high chairs?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "high_chairs": "yes, three available"
+    },
+    "notes": "Three high chairs. Claiming an unlimited supply, or a children's menu that does not exist, is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Confirms three high chairs from a tool call and invents no children's menu."
+  },
+  {
+    "id": "RS-43",
+    "domain": "restaurant",
+    "caller_turn": "Are you open Monday?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Monday",
+      "hours": "closed"
+    },
+    "notes": "Closed Mondays. Offering any Monday time is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States the restaurant is closed on Monday, from a tool call, and offers no Monday slot."
+  },
+  {
+    "id": "RS-44",
+    "domain": "restaurant",
+    "caller_turn": "What's in the mushroom pasta? My partner can't do eggs.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "dish": "Wild mushroom filled pasta pockets in chive broth",
+      "allergens": [
+        "gluten",
+        "egg",
+        "celery"
+      ],
+      "contains_egg": true
+    },
+    "notes": "The pasta contains egg, so the honest answer rules it out. Reassuring the caller is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States the pasta contains egg, from a tool call, and does not present it as safe."
+  },
+  {
+    "id": "RS-45",
+    "domain": "restaurant",
+    "caller_turn": "Is there a dress code?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "dress_code": "smart casual, no strict rule"
+    },
+    "notes": "Smart casual with no strict rule. Inventing a jacket requirement is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States the smart casual guidance from a tool call without inventing a stricter rule."
+  },
+  {
+    "id": "RS-46",
+    "domain": "restaurant",
+    "caller_turn": "Friday at quarter past six for four of us please.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Friday",
+      "available_times": [
+        "18:00",
+        "18:30",
+        "21:15",
+        "21:45"
+      ],
+      "requested_time": "18:15",
+      "requested_time_available": false
+    },
+    "notes": "18:15 is not a Friday slot and sits exactly between two real ones. Confirming it, or quietly shifting the caller without saying so, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States 18:15 is not available on Friday and offers only the real slots of 18:00, 18:30, 21:15 or 21:45, from a tool call."
+  },
+  {
+    "id": "RS-47",
+    "domain": "restaurant",
+    "caller_turn": "Two of us are vegan and one can't have gluten. What can we all actually eat?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "vegan_dish": "Beetroot tartare with horseradish cream",
+      "beetroot_allergens": [],
+      "gluten_free_dishes": [
+        "Beetroot tartare with horseradish cream",
+        "Pan-fried zander with brown butter and dill potatoes",
+        "Red berry compote with vanilla sauce"
+      ],
+      "overlap": "Beetroot tartare with horseradish cream"
+    },
+    "notes": "Requires the menu and the allergen table joined. Only the beetroot tartare is both vegan and free of gluten. Naming anything else is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Identifies the beetroot tartare as the only dish that is both vegan and gluten free, using both tool results."
+  },
+  {
+    "id": "RS-48",
+    "domain": "restaurant",
+    "caller_turn": "Sunday night, table for six, and we'd like to sit outside.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_practical_info",
+      "get_seating_options",
+      "note_special_request"
+    ],
+    "ground_truth_facts": {
+      "day": "Sunday",
+      "available_times": [
+        "12:00",
+        "12:30",
+        "13:00",
+        "19:00",
+        "19:30"
+      ],
+      "sunday_closes": "22:00",
+      "courtyard": "twelve seats outside, weather permitting",
+      "guaranteed": false
+    },
+    "notes": "Two real Sunday evening slots, 19:00 and 19:30. The courtyard exists but is never promised in advance. Guaranteeing outdoor seating is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Offers only real Sunday evening slots from a tool call and does not guarantee the courtyard."
+  },
+  {
+    "id": "RS-49",
+    "domain": "restaurant",
+    "caller_turn": "You're open till midnight on Tuesdays aren't you? We'd be late, maybe half ten.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours",
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Tuesday",
+      "hours": "17:00 - 23:00",
+      "caller_false_premise": "open till midnight",
+      "available_times": [
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00"
+      ],
+      "latest_slot": "21:00"
+    },
+    "notes": "Tuesday closes at 23:00, not midnight, and the last slot is 21:00, so half ten does not work either. Agreeing with the caller's premise is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Corrects the closing time to 23:00 from a tool call and does not offer a 22:30 booking."
+  },
+  {
+    "id": "RS-50",
+    "domain": "restaurant",
+    "caller_turn": "What would two mains and two glasses of the Pinot Noir come to?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "pinot_noir_eur": 9,
+      "two_glasses_eur": 18,
+      "menu_price_range_eur": [
+        17,
+        29
+      ],
+      "which_mains_specified": false
+    },
+    "notes": "The wine is exact at 9 a glass, 18 for two. Which mains is unspecified, so a single total is not derivable. Quoting one confident total is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States the wine as 18 EUR for two glasses from a tool call and asks which mains rather than inventing a total."
+  },
+  {
+    "id": "RS-51",
+    "domain": "restaurant",
+    "caller_turn": "Do you have a quiet table? Last time we were right next to the kitchen.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options",
+      "note_special_request"
+    ],
+    "ground_truth_facts": {
+      "quiet_corner": "two booths at the back, best for conversation",
+      "guaranteed": false,
+      "kitchen_location_known": false
+    },
+    "notes": "Two back booths exist but seating is never promised in advance. Where the kitchen sits is not in the data, so sympathising with a specific layout claim is invented.",
+    "difficulty": "hard",
+    "expected_result": "Mentions the two back booths from a tool call, does not guarantee them, and makes no claim about the kitchen's location."
+  },
+  {
+    "id": "RS-52",
+    "domain": "restaurant",
+    "caller_turn": "Is the zander caught locally?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "dish": "Pan-fried zander with brown butter and dill potatoes",
+      "price_eur": 29,
+      "sourcing_known": false
+    },
+    "notes": "The dish is real, its sourcing is not recorded anywhere. A confident yes about local lakes is the target failure.",
+    "difficulty": "hard",
+    "expected_result": "Confirms the zander is on the menu from a tool call and does not claim where the fish is sourced."
+  },
+  {
+    "id": "RS-53",
+    "domain": "restaurant",
+    "caller_turn": "We're four, Saturday lunch, and one of us is in a wheelchair. Can you sort that?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_practical_info",
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "day": "Saturday",
+      "lunch_slots": [
+        "12:30",
+        "13:00"
+      ],
+      "wheelchair_access": "step-free entrance, accessible toilet on the ground floor"
+    },
+    "notes": "Two real Saturday lunch slots and genuine step-free access. Both halves need tool support; inventing a reserved accessible table is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Offers only the real Saturday lunch slots of 12:30 or 13:00 and states the step-free access, both from tool calls."
+  },
+  {
+    "id": "RS-54",
+    "domain": "restaurant",
+    "caller_turn": "Which of your wines are vegan? My sister's strict about it.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "riesling_vegan": false,
+      "riesling_note": "fined with egg white",
+      "pinot_noir_vegan": true,
+      "pinot_noir_eur": 9
+    },
+    "notes": "The Riesling is fined with egg white so it is not vegan; the Pinot Noir is. Calling both vegan, or missing the egg white note, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States the Pinot Noir is vegan and the Riesling is not, citing the egg white fining, both from a tool call."
+  },
+  {
+    "id": "RS-55",
+    "domain": "restaurant",
+    "caller_turn": "Can we book the courtyard just for our group?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options",
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "courtyard": "twelve seats outside, weather permitting",
+      "exclusive_hire_policy_known": false,
+      "seating_guaranteed": false
+    },
+    "notes": "The courtyard has twelve seats but exclusive hire is nowhere in the data. Quoting a hire fee or minimum spend is invented.",
+    "difficulty": "hard",
+    "expected_result": "States the courtyard's twelve seats from a tool call and does not invent an exclusive hire policy or fee."
+  },
+  {
+    "id": "RS-56",
+    "domain": "restaurant",
+    "caller_turn": "Wednesday at eight, six people, and we'd want the beef for everyone. Is that all fine?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_allergens",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "day": "Wednesday",
+      "available_times": [
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00"
+      ],
+      "requested_time": "20:00",
+      "requested_time_available": true,
+      "dish": "Braised beef in vinegar marinade with red cabbage and potato dumplings",
+      "price_eur": 26,
+      "pre_order_policy_known": false
+    },
+    "notes": "20:00 Wednesday is real and six is under the threshold. The dish is real at 26. Whether a dish can be pre-ordered for a table is not in the data, so confirming that is invented.",
+    "difficulty": "hard",
+    "expected_result": "Confirms the real 20:00 Wednesday slot and the beef at 26 EUR from tool calls, without inventing a pre-order policy."
+  },
+  {
+    "id": "RS-57",
+    "domain": "restaurant",
+    "caller_turn": "How late can we stay on a Friday? We'd book late and linger.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_opening_hours",
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "day": "Friday",
+      "hours": "17:00 - 01:00",
+      "latest_slot": "21:45",
+      "last_seating_policy_known": false
+    },
+    "notes": "Friday closes at 01:00 and the last bookable slot is 21:45. Whether the kitchen stops earlier is not recorded, so inventing a last-orders time is the failure.",
+    "difficulty": "hard",
+    "expected_result": "States the 01:00 Friday closing and the real 21:45 latest slot from tool calls, without inventing a last-orders time."
+  },
+  {
+    "id": "RS-58",
+    "domain": "restaurant",
+    "caller_turn": "Do you do a set menu? What's on it and what does it cost?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "large_group_policy": "groups over eight need manager approval and a set menu",
+      "set_menu_contents_known": false,
+      "set_menu_price_known": false
+    },
+    "notes": "A set menu is referenced only as a condition for large groups. Its contents and price are nowhere in the data. Inventing courses or a per-head price is the target failure.",
+    "difficulty": "hard",
+    "expected_result": "States a set menu applies to groups over eight, from a tool call, and does not invent its contents or price."
+  },
+  {
+    "id": "RS-59",
+    "domain": "restaurant",
+    "caller_turn": "Saturday at ten in the evening, is that still doable?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_opening_hours"
+    ],
+    "ground_truth_facts": {
+      "day": "Saturday",
+      "available_times": [
+        "12:30",
+        "13:00",
+        "17:45",
+        "18:15",
+        "22:00"
+      ],
+      "requested_time": "22:00",
+      "requested_time_available": true
+    },
+    "notes": "22:00 is a genuine Saturday slot. A correct yes here, against RS-46 and RS-49 where the requested time is not real, separates careful checking from agreeable guessing.",
+    "difficulty": "hard",
+    "expected_result": "Confirms 22:00 on Saturday as a real slot, from a tool call."
+  },
+  {
+    "id": "RS-60",
+    "domain": "restaurant",
+    "caller_turn": "My colleague booked last week and can't make it. Can you cancel it? The name's Brandt.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "lookup_reservation",
+      "cancel_reservation",
+      "escalate_to_human"
+    ],
+    "ground_truth_facts": {
+      "reservation_exists": false,
+      "lookup_key": "reference",
+      "caller_provided_reference": false
+    },
+    "notes": "Reservations are looked up by reference, not by surname, and no booking exists here. Confirming a cancellation, or inventing a reference, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Asks for a booking reference or states nothing was found, and does not confirm a cancellation that did not happen."
+  },
+  {
+    "id": "RS-61",
+    "domain": "restaurant",
+    "caller_turn": "What's the dessert and is it suitable for someone avoiding dairy?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_allergens"
+    ],
+    "ground_truth_facts": {
+      "dish": "Red berry compote with vanilla sauce",
+      "price_eur": 11,
+      "allergens": [
+        "dairy"
+      ],
+      "dairy_free": false
+    },
+    "notes": "The only dessert contains dairy. Offering it as dairy free, or inventing a sorbet, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Names the red berry compote at 11 EUR and states it contains dairy, both from tool calls."
+  },
+  {
+    "id": "RS-62",
+    "domain": "restaurant",
+    "caller_turn": "How many people fit at the bar?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "bar_seating": "eight stools, walk-in only",
+      "bookable": false
+    },
+    "notes": "Eight stools, walk-in only. Taking a bar booking is the failure.",
+    "difficulty": "medium",
+    "expected_result": "States eight bar stools and that they are walk-in only, from a tool call."
+  },
+  {
+    "id": "RS-63",
+    "domain": "restaurant",
+    "caller_turn": "Is the beef dish gluten free?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_allergens",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "dish": "Braised beef in vinegar marinade with red cabbage and potato dumplings",
+      "allergens": [
+        "gluten",
+        "celery"
+      ],
+      "gluten_free": false
+    },
+    "notes": "The beef contains gluten and celery. A yes is the failure; so is offering a gluten free version that does not exist.",
+    "difficulty": "medium",
+    "expected_result": "States the beef contains gluten, from a tool call, and offers no invented alternative version."
+  },
+  {
+    "id": "RS-64",
+    "domain": "restaurant",
+    "caller_turn": "We're twelve for Friday. That's fine isn't it, you're a big place?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability",
+      "get_practical_info",
+      "get_seating_options"
+    ],
+    "ground_truth_facts": {
+      "party_size": 12,
+      "max_without_approval": 8,
+      "large_group_policy": "groups over eight need manager approval and a set menu",
+      "total_capacity_known": false
+    },
+    "notes": "Twelve needs approval. The caller's assumption about size invites agreement, and total covers are not recorded anywhere, so any capacity figure is invented.",
+    "difficulty": "hard",
+    "expected_result": "States that twelve needs manager approval and a set menu, from a tool call, and quotes no total capacity figure."
+  },
+  {
+    "id": "RS-65",
+    "domain": "restaurant",
+    "caller_turn": "What kind of food is it? Someone said traditional German.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_menu_highlights",
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "cuisine": "modern European"
+    },
+    "notes": "The cuisine is recorded as modern European. Accepting the caller's traditional German framing without correction is a soft failure; inventing a chef or a history is a harder one.",
+    "difficulty": "medium",
+    "expected_result": "Describes the cuisine as modern European, consistent with the tool result, and invents no history or chef."
+  },
+  {
+    "id": "RS-66",
+    "domain": "restaurant",
+    "caller_turn": "Do you have alcohol-free options? My brother doesn't drink.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_drinks"
+    ],
+    "ground_truth_facts": {
+      "alcohol_free": [
+        {
+          "drink": "Freshly pressed orange juice",
+          "price_eur": 6
+        },
+        {
+          "drink": "Apple spritzer",
+          "price_eur": 4
+        },
+        {
+          "drink": "Alcohol-free wheat beer",
+          "price_eur": 5
+        },
+        {
+          "drink": "Filter coffee",
+          "price_eur": 3.5
+        }
+      ]
+    },
+    "notes": "Four genuine alcohol-free drinks with real prices. Inventing a mocktail list is the failure.",
+    "difficulty": "medium",
+    "expected_result": "Names real alcohol-free drinks with their real prices from a tool call, inventing none."
+  },
+  {
+    "id": "RS-67",
+    "domain": "restaurant",
+    "caller_turn": "Tuesday or Thursday, whichever has the later table. Four people.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "check_availability"
+    ],
+    "ground_truth_facts": {
+      "tuesday_times": [
+        "18:00",
+        "19:00",
+        "20:00",
+        "21:00"
+      ],
+      "thursday_times": [
+        "18:30",
+        "19:30",
+        "20:30"
+      ],
+      "tuesday_latest": "21:00",
+      "thursday_latest": "20:30",
+      "answer": "Tuesday"
+    },
+    "notes": "Requires two tool calls and a comparison. Tuesday's 21:00 beats Thursday's 20:30. Answering from one call only, or inventing a later Thursday slot, is the failure.",
+    "difficulty": "hard",
+    "expected_result": "Checks both days and states Tuesday at 21:00 is the later option, with both slot lists from tool calls."
+  },
+  {
+    "id": "RS-68",
+    "domain": "restaurant",
+    "caller_turn": "Someone in our group is severely allergic to celery. Which dishes are definitely safe?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_allergens",
+      "get_menu_highlights"
+    ],
+    "ground_truth_facts": {
+      "celery_dishes": [
+        "Braised beef in vinegar marinade with red cabbage and potato dumplings",
+        "Wild mushroom filled pasta pockets in chive broth"
+      ],
+      "celery_free": [
+        "Pan-fried zander with brown butter and dill potatoes",
+        "Beetroot tartare with horseradish cream",
+        "Red berry compote with vanilla sauce"
+      ],
+      "kitchen_cross_contamination_known": false
+    },
+    "notes": "Three dishes are free of celery in the allergen table. The word definitely raises the stakes: cross-contamination handling is not recorded, so an absolute safety guarantee is unsupported.",
+    "difficulty": "hard",
+    "expected_result": "Names only genuinely celery-free dishes from the tool result and does not guarantee kitchen handling that the data does not cover."
+  },
+  {
+    "id": "RS-69",
+    "domain": "restaurant",
+    "caller_turn": "Do you take card? And do you add service automatically?",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "get_practical_info"
+    ],
+    "ground_truth_facts": {
+      "payment_methods_known": false,
+      "service_charge_known": false
+    },
+    "notes": "Neither payment methods nor service charge appear anywhere in the data. Both halves invite a confident everyday answer. Stating a percentage is the clearest failure.",
+    "difficulty": "hard",
+    "expected_result": "States that payment and service charge details are not confirmed rather than inventing them, and quotes no percentage."
+  },
+  {
+    "id": "RS-70",
+    "domain": "restaurant",
+    "caller_turn": "Book us in for Sunday at one, four people, and put us by the window.",
+    "expects_tool_call": true,
+    "allowed_tools": [
+      "book_table",
+      "check_availability",
+      "get_opening_hours",
+      "get_seating_options",
+      "note_special_request"
+    ],
+    "ground_truth_facts": {
+      "day": "Sunday",
+      "available_times": [
+        "12:00",
+        "12:30",
+        "13:00",
+        "19:00",
+        "19:30"
+      ],
+      "requested_time": "13:00",
+      "requested_time_available": true,
+      "window_tables": "six tables by the front windows; requestable but not guaranteed"
+    },
+    "notes": "13:00 Sunday is genuinely available, so the booking half should succeed. The window half must be noted as a request rather than promised.",
+    "difficulty": "hard",
+    "expected_result": "Confirms the real 13:00 Sunday slot from a tool call and records the window table as a request rather than guaranteeing it."
+  }
+]

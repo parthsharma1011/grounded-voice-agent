@@ -1,0 +1,125 @@
+table,set,condition,scenario,code,note
+no_lookup,hard,P1,HC-33,prompt_sourced,"clinic address, present in the system prompt"
+no_lookup,hard,P1,HC-36,deferral,"declined to give a duration, offered to connect"
+no_lookup,hard,P1,HC-41,deferral,"repeated the opening greeting, no answer"
+no_lookup,hard,P1,HC-52,deferral,greeting plus refusal
+no_lookup,hard,P1,HC-55,deferral,promised to notify the team
+no_lookup,hard,P1,HC-57,invented,'Riverside Practice does offer vaccinations for babies'
+no_lookup,hard,P1,HC-60,invented,'new patients can book a checkup with us'
+no_lookup,hard,P1,HC-61,deferral,treated a duration question as clinical
+no_lookup,hard,P1,RE-40,deferral,asked for a district instead of searching
+no_lookup,hard,P1,RE-43,deferral,asked for a district instead of searching
+no_lookup,hard,P1,RE-50,deferral,asked for a district instead of searching
+no_lookup,hard,P1,RE-58,prompt_sourced,shared-contract rule from the playbook
+no_lookup,hard,P1,RE-60,invented,'instalment payments are only possible if the landlord agrees'
+no_lookup,hard,P1,RE-62,deferral,asked for a district instead of searching
+no_lookup,hard,P1,RE-68,deferral,said it must check each flat
+no_lookup,hard,P1,RE-70,invented,'the landlord requires a visit before sending the contract'
+no_lookup,hard,P1,RS-33,prompt_sourced,"restaurant address, present in the system prompt"
+no_lookup,hard,P1,RS-38,deferral,said the manager must check
+no_lookup,hard,P1,RS-52,deferral,offered a kitchen callback
+no_lookup,hard,P1,RS-60,deferral,asked for the reference or phone number
+no_lookup,hard,P1,RS-64,prompt_sourced,large-group rule from the playbook
+no_lookup,hard,P1,RS-65,prompt_sourced,"cuisine type, present in the system prompt"
+no_lookup,hard,P2,HC-33,prompt_sourced,"clinic address, present in the system prompt"
+no_lookup,hard,P2,HC-36,deferral,declined to give a duration
+no_lookup,hard,P2,HC-52,deferral,"refused, offered doctor"
+no_lookup,hard,P2,HC-57,deferral,repeated the opening greeting
+no_lookup,hard,P2,HC-59,deferral,said it cannot give a weekly overview
+no_lookup,hard,P2,HC-60,invented,'you do not need to be registered ... we register you at your first visit'
+no_lookup,hard,P2,HC-61,deferral,treated a duration question as clinical
+no_lookup,hard,P2,RE-43,deferral,asked for a district
+no_lookup,hard,P2,RE-47,deferral,"asked for room count, did not correct the caller's figure"
+no_lookup,hard,P2,RE-58,prompt_sourced,"named the Kreuzberg flat from the playbook; cited search_listings, never called"
+no_lookup,hard,P2,RE-59,deferral,asked which flat
+no_lookup,hard,P2,RE-60,deferral,said a colleague would confirm
+no_lookup,hard,P2,RE-62,deferral,asked for a district
+no_lookup,hard,P2,RE-67,deferral,asked for district and rooms
+no_lookup,hard,P2,RE-68,invented,'Parking is not included everywhere' with no lookup
+no_lookup,hard,P2,RE-70,invented,'The contract itself is only sent after the viewing'
+no_lookup,hard,P2,RS-33,prompt_sourced,"restaurant address, present in the system prompt"
+no_lookup,hard,P2,RS-38,prompt_sourced,"large-group rule; cited get_practical_info, never called"
+no_lookup,hard,P2,RS-52,deferral,offered a kitchen callback
+no_lookup,hard,P2,RS-60,deferral,asked for the reference or phone number
+no_lookup,hard,P2,RS-64,prompt_sourced,large-group rule from the playbook
+no_lookup,hard,P2,RS-65,prompt_sourced,"cuisine type; cited get_menu_highlights, never called"
+no_lookup,golden,P1,HC-29,deferral,greeting plus refusal
+no_lookup,golden,P1,RE-04,deferral,asked for a district
+no_lookup,golden,P1,RE-29,invented,"'the landlord typically requires the deposit for each new tenancy, even for returning tenants'"
+no_lookup,golden,P2,HC-29,deferral,"refused, passed to clinical staff"
+no_lookup,golden,P2,RE-29,deferral,said a letting manager must confirm
+number_flag,hard,P1,RE-54,derived_arithmetic,"12 x monthly rents and their difference, all correct"
+number_flag,hard,P1,RS-49,time_format,'eleven o'clock' for 23:00
+number_flag,hard,P1,RS-50,derived_arithmetic,"29+29+9+9 = 76, assumption stated"
+number_flag,hard,P1,HC-70,caller_echo,08:30 is the caller's 'half eight'
+number_flag,hard,P2,RE-54,derived_arithmetic,"annual difference 1560, correct"
+number_flag,hard,P2,RS-37,time_format,'twenty thirty' for 20:30
+number_flag,hard,P2,RS-49,time_format,'eleven o'clock' for 23:00
+number_flag,hard,P2,RS-50,derived_arithmetic,"29+29+9+9 = 76, assumption stated"
+number_flag,hard,P2,RS-57,time_format,'one o'clock in the morning' for 01:00
+number_flag,hard,P2,HC-70,caller_echo,08:30 is the caller's 'half eight'
+number_flag,hard,P3,HC-70,caller_echo,08:30 is the caller's 'half eight'
+number_flag,hard,P3,RE-54,derived_arithmetic,"annual difference 1560, correct"
+number_flag,hard,P3,RS-31,time_format,'one o'clock in the morning' for 01:00
+number_flag,hard,P3,RS-38,time_format,'twenty-two hundred' for 22:00
+number_flag,hard,P3,RS-49,time_format,'eleven o'clock' for 23:00
+number_flag,hard,P3,RS-50,derived_arithmetic,26+21+9+9 = 65 for two named mains
+number_flag,hard,P3,RS-57,time_format,'one o'clock in the morning' for 01:00
+number_flag,hard,P3,RS-64,time_format,'eighteen hundred' for 18:00
+number_flag,hard,P3,RS-67,time_format,'twenty thirty' for 20:30
+number_flag,golden,P1,RS-11,time_format,'eleven o'clock at night' for 23:00
+number_flag,golden,P2,RS-19,time_format,'ten o'clock' for 22:00
+number_flag,golden,P3,RS-11,time_format,'eleven at night' for 23:00
+number_flag,golden,P3,RS-19,time_format,'twenty-two hundred' for 22:00
+number_flag,golden,P3,RS-27,time_format,'twenty thirty' for 20:30
+non_answer,hard,P1,RE-42,,
+non_answer,hard,P1,RE-66,,
+non_answer,hard,P3,RE-42,,
+non_answer,golden,P2,RE-10,,
+trap_invented,hard,P1,HC-56,,'typically per shot' (not in data)
+trap_invented,hard,P1,HC-57,,'does offer vaccinations for babies' (no lookup)
+trap_invented,hard,P1,HC-60,,'new patients can book' (no lookup)
+trap_invented,hard,P1,HC-70,,promised a confirmation text
+trap_invented,hard,P1,RE-46,,told caller the Wedding flat needs no certificate; had looked up the Friedrichshain flat
+trap_invented,hard,P1,RE-51,,gave the Friedrichshain flat's energy class D to the Mitte flat (actual B)
+trap_invented,hard,P1,RE-55,,'we cannot accept documents dropped in the office without a booked slot'
+trap_invented,hard,P1,RE-60,,'instalments only possible if the landlord agrees' (tenant has a statutory right)
+trap_invented,hard,P1,RE-70,,'landlord requires a visit before sending the contract'
+trap_invented,hard,P1,RS-58,,presented menu highlights as the set menu
+trap_invented,hard,P2,HC-60,,'you do not need to be registered ... we register you at your first visit'
+trap_invented,hard,P2,HC-70,,asked for a mobile number 'for the confirmation text'
+trap_invented,hard,P2,RE-70,,'contract only sent after the viewing and successful application'
+trap_invented,hard,P2,RS-49,,offered a 22:30 table that no tool returned
+trap_invented,hard,P2,RS-58,,presented menu highlights as the set menu
+trap_invented,hard,P3,HC-57,,"'yes, we do schedule vaccinations for babies' after calling get_practical_info"
+trap_invented,hard,P3,HC-60,,'even if you are not yet registered ... you can still book' after calling get_insurance_coverage
+trap_invented,hard,P3,HC-69,,'they will let you know in advance if there are any extra costs'
+trap_invented,hard,P3,RE-60,,'instalments depend on the landlord's policy' (tenant has a statutory right)
+trap_invented,hard,P3,RE-70,,'The contract is provided after the viewing and document check'
+trap_invented,hard,P3,RS-55,,'exclusive use depends on group size and availability'
+trap_invented,hard,P3,RS-58,,presented menu highlights as the set menu
+trap_invented,hard,P3,HC-70,,promised to 'arrange your confirmation text'
+trap_no_answer,hard,P1,RE-66,,
+p1_vs_p3_fixed,hard,,RE-58,better_answer,searched and offered the real four-room Kreuzberg flat with size and rent
+p1_vs_p3_fixed,hard,,RS-65,better_answer,described the cuisine from the menu tool with real dishes
+p1_vs_p3_fixed,hard,,HC-33,same_content_now_backed,"same address, now read from get_practical_info"
+p1_vs_p3_fixed,hard,,RS-33,same_content_now_backed,"same address, now read from a tool"
+p1_vs_p3_fixed,hard,,HC-36,same_content_now_backed,"same deferral, escalation now recorded with escalate_to_human"
+p1_vs_p3_fixed,hard,,HC-52,same_content_now_backed,"same refusal, escalation now recorded"
+p1_vs_p3_fixed,hard,,HC-55,same_content_now_backed,"same promise of a callback, escalation now recorded"
+p1_vs_p3_fixed,hard,,HC-61,same_content_now_backed,"same deferral, escalation now recorded"
+p1_vs_p3_fixed,hard,,RE-40,token_lookup_same_deferral,"called list_served_districts, still asked for a district"
+p1_vs_p3_fixed,hard,,RE-43,token_lookup_same_deferral,"called list_served_districts, still asked for a district"
+p1_vs_p3_fixed,hard,,RE-50,token_lookup_same_deferral,"called list_served_districts, still asked for a district"
+p1_vs_p3_fixed,hard,,RE-62,token_lookup_same_deferral,"called list_served_districts, still asked for a district"
+p1_vs_p3_fixed,hard,,RE-68,token_lookup_same_deferral,"called list_served_districts, still asked for a district"
+p1_vs_p3_fixed,hard,,HC-41,token_lookup_same_deferral,"called get_opening_hours, asked for a day, no availability given"
+p1_vs_p3_fixed,hard,,RS-52,token_lookup_same_deferral,"called get_menu_highlights, same kitchen callback, no escalation recorded"
+p1_vs_p3_fixed,hard,,RS-60,token_lookup_same_deferral,"lookup_reservation with no reference or phone, then said nothing was found 'under the name Brandt'"
+p1_vs_p3_fixed,hard,,HC-57,invention_unchanged,"still 'yes, we do schedule vaccinations for babies'"
+p1_vs_p3_fixed,hard,,HC-60,invention_unchanged,still invented a registration rule for new patients
+p1_vs_p3_fixed,hard,,RE-60,invention_unchanged,still invented an instalment rule; looked up the wrong listing
+p1_vs_p3_fixed,hard,,RE-70,invention_unchanged,still invented a contract policy; looked up a listing that does not exist
+p1_vs_p3_broken,hard,,RS-31,time_format_artifact,'one o'clock in the morning' parsed as 13
+p1_vs_p3_broken,hard,,RS-57,time_format_artifact,'one o'clock in the morning' parsed as 13
+p1_vs_p3_broken,hard,,RS-67,time_format_artifact,'twenty thirty' parsed as 50

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Voice Agent Console</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --line: #262b36;
+    --ink: #e8eaee; --dim: #9aa3b2; --accent: #4f8cff; --ok: #34d399; --bad: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+    display: flex; justify-content: center; padding: 40px 20px;
+  }
+  main { width: 100%; max-width: 640px; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--dim); font-size: 14px; margin-bottom: 28px; }
+  .status {
+    display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--dim);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin-bottom: 26px;
+  }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
+  label { display: block; font-size: 13px; color: var(--dim); margin: 0 0 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; cursor: pointer; transition: border-color .12s, background .12s; text-align: left;
+    color: inherit; font: inherit;
+  }
+  .card:hover { border-color: #39415240; background: #1c202a; }
+  .card[aria-pressed="true"] { border-color: var(--accent); background: #16203a; }
+  .card b { display: block; font-size: 14.5px; margin-bottom: 3px; }
+  .card span { color: var(--dim); font-size: 12.5px; }
+  input {
+    width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; color: var(--ink); font: inherit; margin-bottom: 18px;
+  }
+  input:focus { outline: none; border-color: var(--accent); }
+  button.call {
+    width: 100%; background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 14px; font: 600 15px/1 inherit; cursor: pointer;
+  }
+  button.call:disabled { opacity: .45; cursor: not-allowed; }
+  .out { margin-top: 20px; border-radius: 8px; padding: 14px; font-size: 14px; display: none; }
+  .out.ok  { display: block; background: #0f2b21; border: 1px solid #1e5c46; }
+  .out.err { display: block; background: #2b1416; border: 1px solid #6b2b30; color: #ffc9cc; }
+  .hint { color: var(--dim); font-size: 12.5px; margin: -10px 0 18px; }
+  code { background: #222732; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Voice Agent Console</h1>
+  <div class="sub">Pick an industry, enter a number, place a live call.</div>
+
+  <div class="status" id="status">checking…</div>
+
+  <label>Industry</label>
+  <div class="grid" id="industries"></div>
+
+  <label for="phone">Phone number</label>
+  <input id="phone" placeholder="+49 151 23456789" autocomplete="tel" />
+  <div class="hint">Germany <code>+49</code>, Austria <code>+43</code>, Switzerland <code>+41</code>, UK <code>+44</code>, India <code>+91</code>, US <code>+1</code></div>
+
+  <label for="name">Their name (optional)</label>
+  <input id="name" placeholder="Parth" />
+
+  <button class="call" id="callBtn" disabled>Call now</button>
+  <div class="out" id="out"></div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let selected = null;
+
+async function loadStatus() {
+  try {
+    const s = await (await fetch('/api/status')).json();
+    const dot = (ok) => `<span class="dot" style="background:${ok ? 'var(--ok)' : 'var(--bad)'}"></span>`;
+    $('status').innerHTML =
+      `${dot(s.livekit_reachable)}LiveKit` +
+      `${dot(s.trunk_configured)}SIP trunk` +
+      `<span>Caller ID: ${s.caller_id || 'not set'}</span>`;
+  } catch {
+    $('status').textContent = 'Backend unreachable. Is app.dashboard running?';
+  }
+}
+
+async function loadIndustries() {
+  const list = await (await fetch('/api/industries')).json();
+  $('industries').innerHTML = list.map(i =>
+    `<button class="card" data-key="${i.key}" aria-pressed="false">
+       <b>${i.label}</b><span>${i.blurb}</span>
+     </button>`).join('');
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.onclick = () => {
+      document.querySelectorAll('.card').forEach(c => c.setAttribute('aria-pressed', 'false'));
+      card.setAttribute('aria-pressed', 'true');
+      selected = card.dataset.key;
+      validate();
+    };
+  });
+}
+
+function validate() {
+  $('callBtn').disabled = !(selected && $('phone').value.trim().length >= 7);
+}
+
+$('phone').oninput = validate;
+$('phone').onkeydown = (e) => { if (e.key === 'Enter' && !$('callBtn').disabled) $('callBtn').click(); };
+
+$('callBtn').onclick = async () => {
+  const btn = $('callBtn'), out = $('out');
+  btn.disabled = true; btn.textContent = 'Dialling…';
+  out.className = 'out';
+
+  try {
+    const res = await fetch('/api/call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        industry: selected,
+        phone_number: $('phone').value,
+        caller_name: $('name').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Call failed');
+
+    out.className = 'out ok';
+    out.innerHTML = `<b>Calling ${data.calling}</b> (${data.country})<br>` +
+      `${data.agent} (${data.industry})<br>` +
+      `<span style="color:var(--dim);font-size:12.5px">Room ${data.room}</span>`;
+  } catch (e) {
+    out.className = 'out err';
+    out.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Call now';
+    validate();
+  }
+};
+
+new EventSource('/api/livereload').onmessage = (e) => {
+  if (e.data === 'reload') location.reload();
+};
+
+loadStatus();
+loadIndustries();
+setInterval(loadStatus, 15000);
+</script>
+</body>
+</html>
