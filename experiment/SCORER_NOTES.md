@@ -32,7 +32,7 @@ Why each rule in `experiment/scorer.py` and `experiment/run.py` exists.
    - Zero-padded forms are not produced. A padded "06" matched nothing and only created false flags (RE-08, RE-24).
    - A unit word right after the phrase ("euros", "people", "minutes", and so on) means the two words are one number: "twenty five euros" is 25, not 20:05.
    - "o'clock" gives a bare hour.
-   - **Known limitation, reported in Chapter 4:** because both readings are produced and every two-digit number must appear in a tool result, the reading the tool did not use is flagged. Examples are "eleven o'clock" for 23:00 and "one o'clock in the morning" for 01:00. This causes most of the time false alarms found in the audit.
+   - **Known limitation, reported in the thesis:** because both readings are produced and every two-digit number must appear in a tool result, the reading the tool did not use is flagged. Examples are "eleven o'clock" for 23:00 and "one o'clock in the morning" for 01:00. This causes most of the time false alarms found in the audit.
 
 10. **Times on the tool side.** A tool result "5 PM" is correctly spoken as 17. Every hour marked AM or PM in a tool result therefore also adds its 24-hour form (RE-08).
 

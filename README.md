@@ -1,6 +1,6 @@
 # Grounded voice agent
 
-This is the code and data behind the thesis *Checking Before Speaking*. It has two parts:
+This is the code and data behind the thesis *Checking Before Speaking*, which asks how to stop a voice agent from stating business facts it never looked up. It has two parts:
 
 - **The live app:** an outbound phone agent built on LiveKit Agents and a Twilio SIP trunk. It serves several personas, and each persona can state business facts only by calling a tool.
 - **The experiment:** it gives the same questions to three versions of the agent (P1 prompt only, P2 cited schema, P3 forced tool call plus self-verification) and scores every answer for groundedness. The analysis scripts then produce every number and chart in the thesis.
@@ -21,7 +21,7 @@ personas/         who the model speaks as
   restaurant.py     Lena, Zur Goldenen Gans (16 tools)
   healthcare.py     Petra, Riverside Practice (11 tools, experiment only)
 knowledge_base/   the only source of business facts, one module per persona
-experiment/       Chapter 3: generate and score the answers
+experiment/       generate and score the answers
   run.py            runs the three conditions over a question set
   scorer.py         the deterministic groundedness check
   rescore.py        re-scores stored answers without calling the model
@@ -30,7 +30,7 @@ experiment/       Chapter 3: generate and score the answers
   SCORER_NOTES.md   why each scoring rule exists
   scenarios/        golden (90 questions) and hard (120 questions)
   results/          stored answers and review sheets for each set
-analysis/         Chapter 4: every number and chart
+analysis/         every number and chart in the thesis
   settings.py       every fixed value: condition names, statistical constants, colours, figure sizes
   formulas.py       the statistical formulas (Wilson, McNemar, Holm, Newcombe, kappa, ...)
   audit_codes.csv   the hand-audit verdicts, one row per coded answer
